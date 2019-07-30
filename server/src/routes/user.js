@@ -13,4 +13,18 @@ router.post('/register', [UserValidation.register, async (req, res) => {
     }
 }]);
 
+router.post('/login', [UserValidation.login, async (req, res) => {
+    const user = await User.findOne({ username: req.body.username }).exec();
+    if (!user) {
+        res.status(400).json({ success: false, message: 'Could not authenticate' });
+    } else {
+        const validPassword = await user.comparePassword(req.body.password);
+        if (!validPassword) {
+            res.status(400).json({ success: false, message: 'Could not authenticate' });
+        } else {
+            res.status(200).json({ success: true, user, token: user.loginToken() });
+        }
+    }
+}]);
+
 module.exports = router;
