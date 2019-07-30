@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const userValidator = require('./validate/user');
+const UserClass = require('../services/user');
 
 const user = new mongoose.Schema({
     name: {
@@ -39,4 +40,5 @@ user.pre('save', function (next) {
     });
 });
 
+user.loadClass(UserClass);
 module.exports = mongoose.model('users', user, 'users');
