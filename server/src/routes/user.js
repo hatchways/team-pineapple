@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const UserValidation = require('./validate/user');
-const User = require('../models/user');
+const { User, Board } = require('../models');
 const upload = require('../services/file-upload');
 
 router.post('/register', [UserValidation.register, async (req, res) => {
@@ -37,6 +37,23 @@ router.put('/:username', [UserValidation.updateUser, upload.single('image'), asy
         res.status(200).json({ success: true, user });
     } catch (err) {
         res.status(400).json({err});
+    }
+}]);
+      
+router.post('/:username/board', [UserValidation.addBoard, async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).select('_id').lean();
+        if (!user) {
+            res.status(400).json({ success: false, message: 'no user found' });
+        } else {
+            const board = await Board.create({
+                title: req.body.title,
+                user: user._id
+            });
+            res.status(201).json({ success: true, board });
+        }
+    } catch(err) {
+        res.status(400).json({ success: false, message: err.errmsg });
     }
 }]);
 
