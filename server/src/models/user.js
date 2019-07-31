@@ -28,13 +28,16 @@ const user = new mongoose.Schema({
         required: true,
         validate: userValidator.password
     },
+    profile: {
+        type: String,
+        required: false
+    }
 });
 
 user.pre('save', function (next) {
     let user = this;
 
     bcrypt.hash(user.password, 10, function(err, hash) {
-        // if (err) console.log(err);
         user.password = hash;
         next();
     });
