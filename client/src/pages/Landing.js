@@ -63,6 +63,7 @@ class LandingPage extends Component {
         {this.state.step >= 3 && (
           <Typography>All done! Now go make a pull request!</Typography>
         )}
+        
       </div>
     );
   }
