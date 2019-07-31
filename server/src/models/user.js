@@ -30,6 +30,12 @@ const user = new mongoose.Schema({
     },
 });
 
+user.virtual('posts', {
+    ref: 'posts',
+    localField: '_id',
+    foreignField: 'user'
+});
+
 user.pre('save', function (next) {
     let user = this;
 

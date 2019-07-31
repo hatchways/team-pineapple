@@ -14,20 +14,20 @@ const PostSchema = new Schema({
     description: {
         type: String
     },
-    destination: {
+    link: {
         type: String
     },
     tags: {
         type: [String]
     },
-    images: {
-        type: [String],
+    image: {
+        type: String,
         required: true
     },
     date: {
         type: Date,
         default: Date.now
     }
-})
+});
 
-module.exports = Post = mongoose.model('post', PostSchema)
+module.exports = mongoose.model('post', PostSchema);
