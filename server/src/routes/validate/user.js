@@ -15,5 +15,12 @@ module.exports = {
         req.checkBody('password', 'No password provided').exists().notEmpty();
 
         validationHandler(req, res, next);
+    },
+
+    updateUser : (req, res, next) => {
+        req.checkParams('username', 'no username provided').exists().notEmpty();
+        req.checkBody('name', 'no name provided').optional();
+
+        validationHandler(req, res, next);
     }
 };
