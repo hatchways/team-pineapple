@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const UserValidation = require('./validate/user');
-const User = require('../models/user');
+const { User, Post } = require('../models');
+const upload = require('../services/file-upload');
 
 router.post('/register', [UserValidation.register, async (req, res) => {
     try{
@@ -24,6 +25,20 @@ router.post('/login', [UserValidation.login, async (req, res) => {
         } else {
             res.status(200).json({ success: true, user, token: user.loginToken() });
         }
+    }
+}]);
+
+router.post('/:username/posts', [upload.single('image'), UserValidation.addPost, async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username }).select('_id').lean();
+        if (!user) {
+            res.status(400).json({ success: false, message: 'no user found' });
+        } else {
+            const post = await Post.create({ ...req.body, image: req.file ? req.file.location : 'https://team-pineapple.s3.ca-central-1.amazonaws.com/KennyMcCormick.png' });
+            res.status(201).json({ success: true, post });
+        }
+    } catch(err) {
+        res.status(400).json({ success: false, message: err });
     }
 }]);
 

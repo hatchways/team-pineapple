@@ -15,5 +15,15 @@ module.exports = {
         req.checkBody('password', 'No password provided').exists().notEmpty();
 
         validationHandler(req, res, next);
-    }
+    },
+
+    addPost: (req, res, next) => {
+        req.checkBody('board', 'No board provided').optional();
+        req.checkBody('title', 'No title provided').exists().notEmpty();
+        req.checkBody('description', 'No description provided').exists().notEmpty();
+        req.checkBody('link', 'No link provided').exists().notEmpty();
+        req.checkBody('tags', 'No tags provided').exists();
+
+        validationHandler(req, res, next);
+    },
 };
