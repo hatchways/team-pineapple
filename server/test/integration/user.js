@@ -1,4 +1,4 @@
-const User  = require('../../src/models/user');
+const { User }  = require('../../src/models');
 const { request, login } = require('../utils/common');
 
 const chai = require('chai');
@@ -85,6 +85,70 @@ describe('User Routes', () => {
         });
     });
 
+    describe('Update profile', () => {
+        //need abs path to file
+        it.skip('Should return vaild', () => {
+            return request
+                .put('/users/temp')
+                .attach('image', '/Users/nick/Desktop/team-pineapple/server/test/utils/test-data/kenny.png')
+                .expect(200)
+                .then((res) => {
+                    expect(res.body.user.profile).to.be.not.empty;
+                    expect(res.body.success).to.be.true;
+                });
+        }).timeout(10000);
+
+        it('Should return vaild (no image)', () => {
+            return request
+                .put('/users/temp')
+                .field('name', 'test')
+                .expect(200)
+                .then((res) => {
+                    expect(res.body.user.name).to.be.equal('test');
+                    expect(res.body.success).to.be.true;
+                });
+        }).timeout(10000);
+    });
+  
+    describe('Create User Board', () => {
+        it('Should return valid', () => {
+            return request
+                .post('/users/temp/board')
+                .send({
+                    'title': 'test board'
+                })
+                .expect(201)
+                .then((res) => {
+                    expect(res.body.success).to.be.true;
+                    expect(res.body.board.title).to.be.equal('test board');
+                });
+        });
+
+        it('Should return no user', () => {
+            return request
+                .post('/users/test/board')
+                .send({
+                    'title': 'test board',
+                })
+                .expect(400)
+                .then((res) => {
+                    expect(res.body.success).to.be.false;
+                });
+        });
+
+        it('Should return invalid', () => {
+            return request
+                .post('/users/test/board')
+                .send({
+                    'title': '',
+                })
+                .expect(422)
+                .then((res) => {
+                    expect(res.body.success).to.be.false;
+                });
+        });
+    });
+  
     describe('Create User Post', () => {
         it('Should return valid', () => {
             return request
