@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "unit": "",
-    "integration": ""
+    "unit": "./node_modules/.bin/mocha ./test/unit --exit",
+    "integration": "./node_modules/.bin/mocha ./test/integration --exit"
   },
   "dependencies": {
     "aws-sdk": "^2.503.0",
