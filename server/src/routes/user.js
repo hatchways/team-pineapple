@@ -53,6 +53,9 @@ router.put('/:username', [upload.single('image'), UserValidation.updateUser, asy
     if (req.body.name) { update.name = req.body.name; }
     try {
         const user = await User.findOneAndUpdate({ username: req.params.username }, update, {new:true}).select('-password').lean();
+        if(!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
         return res.status(200).json({ success: true, user });
     } catch (err) {
         return res.status(400).json({err});
