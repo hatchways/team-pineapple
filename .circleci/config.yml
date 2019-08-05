@@ -22,9 +22,25 @@ jobs: # a collection of steps
           key: dependency-cache-{{ checksum "server/package.json" }}
           paths:
             - server/node_modules
+      - run: # run lint
+          name: server-linting
+          command: cd server && npm run lint
       - run: # run unit tests
-          name: unit-tests
+          name: server-unit-tests
           command: cd server && npm run unit
       - run: # run integration tests
-          name: integration-tests
+          name: server-integration-tests
           command: cd server && npm run integration
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "client/package.json" }}
+      - run:
+          name: install-npm-client
+          command: cd client && npm install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "client/package.json" }}
+          paths:
+            - client/node_modules
+      - run: # run client lint
+          name: client-linting
+          command: cd client && npm run lint
