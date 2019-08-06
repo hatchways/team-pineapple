@@ -59,7 +59,7 @@ describe('User Routes', () => {
     describe('Login', () => {
         it('Should return vaild', () => {
             return login({
-                username: 'temp',
+                email: 'temp@gmail.com',
                 password: 'Password1'
             }).expect(200).then((res) => {
                 expect(res.body.success).to.be.true;
@@ -68,7 +68,7 @@ describe('User Routes', () => {
 
         it('Should return invaild', () => {
             return login({
-                username: 'temp',
+                email: 'temp@gmail.com',
                 password: 'Password2'
             }).expect(400).then((res) => {
                 expect(res.body.success).to.be.false;
@@ -77,7 +77,7 @@ describe('User Routes', () => {
 
         it('Should return no password', () => {
             return login({
-                username: 'temp',
+                email: 'temp@gmail.com',
                 password: ''
             }).expect(422).then((res) => {
                 expect(res.body.success).to.be.false;
