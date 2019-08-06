@@ -8,11 +8,13 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
+    const response = action.response;
+
     switch (action.type) {
     case LOGIN_USER_SUCCESS:
-        return { ...state };
+        return { authenticated: true, user: response.user, token: response.token};
     case LOGIN_USER_ERROR:
-        return { ...state };
+        return { ...state, ...response };
     default:
         return state;
     }
