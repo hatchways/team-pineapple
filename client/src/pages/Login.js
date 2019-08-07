@@ -105,7 +105,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const LogIn = () => {
+const Login = () => {
     const style = useStyles();
     let [email, postEmail] = useState('');
     let [pass, postPass] = useState('');
@@ -168,4 +168,4 @@ const LogIn = () => {
     );
 };
 
-export default LogIn;
+export default Login;
