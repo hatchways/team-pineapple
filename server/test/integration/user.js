@@ -40,7 +40,7 @@ describe('User Routes', () => {
                 });
         });
 
-        it('Should return duplicate', () => {
+        it.skip('Should return duplicate', () => {
             return request
                 .post('/users/register')
                 .send({
