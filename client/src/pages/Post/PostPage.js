@@ -42,6 +42,14 @@ class PostPage extends React.Component {
     render() {
         const { classes } = this.props;
 
+        if(!this.props.post(this.props.match.params.id)) {
+            return (
+                <div>
+                    <h1>No Post found</h1>
+                </div>
+            );
+        }
+
         return(
             <div>
                 <Navbar/>
