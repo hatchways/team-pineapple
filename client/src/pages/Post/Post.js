@@ -6,7 +6,7 @@ import PostDetails from './PostDetails';
 
 const useStyles = makeStyles(theme => ({
     info: {
-        padding: '2rem 0 1rem 3rem',
+        padding: '3rem 0 1rem 3rem',
         width: '55%',
     },
     author: {

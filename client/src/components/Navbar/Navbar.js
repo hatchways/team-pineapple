@@ -32,8 +32,8 @@ const useStyles = makeStyles(theme => ({
         zIndex: '10'
     },
     placeholderHeader: {
-        minHeight: '20vh',
-        height: '20vh'
+        minHeight: '14vh',
+        height: '14vh'
     }
 }));
 
