@@ -8,14 +8,20 @@ class UserClass {
         } catch (err) {
             return false;
         }
-    };
+    }
 
     loginToken() {
-        return jwt.sign({
-            _id: this._id,
-            username: this.username,
-        }, process.env.SECRET, { expiresIn: '24hr' });
-    };
+        return jwt.sign(
+            {
+                user: {
+                    _id: this._id,
+                    username: this.username
+                }
+            },
+            process.env.SECRET,
+            { expiresIn: '24hr' }
+        );
+    }
 }
 
 module.exports = UserClass;
