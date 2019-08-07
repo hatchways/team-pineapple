@@ -40,21 +40,28 @@ describe('User Routes', () => {
                 });
         });
 
-        it.skip('Should return duplicate', () => {
-            return request
-                .post('/users/register')
-                .send({
-                    'name': 'temp',
-                    'username': 'temp',
-                    'email': 'temp@gmail.com',
-                    'password': 'Password1',
-                })
-                .expect(400)
-                .then((res) => {
-                    expect(res.body.success).to.be.false;
-                });
+        it('Should return duplicate',  () => {
+            User.create({
+                'name': 'temp',
+                'username': 'temp',
+                'email': 'temp@gmail.com',
+                'password': 'Password1'
+            }).then(() => {
+                return request
+                    .post('/users/register')
+                    .send({
+                        'name': 'temp',
+                        'username': 'temp',
+                        'email': 'temp@gmail.com',
+                        'password': 'Password1'
+                    })
+                    .expect(400)
+                    .then((res) => {
+                        expect(res.body.success).to.be.false;
+                    });
+            })
         });
-    });
+    }).timeout(3000);
 
     describe('Login', () => {
         it('Should return valid', () => {
