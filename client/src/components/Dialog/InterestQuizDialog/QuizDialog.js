@@ -26,6 +26,10 @@ const styles = theme => ({
     },
     button: {
         margin: '1rem auto'
+    },
+    title : {
+        fontWeight: 'bold',
+        fontSize: 26
     }
 });
 
@@ -67,7 +71,7 @@ class QuizDialog extends React.Component {
         const { children, classes, onClose } = props;
         return (
             <MuiDialogTitle disableTypography className={classes.root}>
-                <Typography variant="h6">{children}</Typography>
+                <Typography variant="h5" className={classes.title}>{children}</Typography>
                 {onClose ? (
                     <IconButton aria-label="close" className={classes.closeButton} onClick={onClose} href={''}>
                         <CloseIcon />
