@@ -45,6 +45,7 @@ describe('User', () => {
         });
 
         it('Should match',async () => {
+            console.log('test');
             const user = await User.create({
                 "name": "temp",
                 "username": "temp",
