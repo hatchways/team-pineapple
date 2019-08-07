@@ -5,8 +5,6 @@ import Avatar from '@material-ui/core/Avatar';
 import face from '../../pages/face.jpg';
 
 const useStyles = makeStyles(theme => ({
-    root: {
-    },
     author: {
         marginTop: '1rem'
     },
@@ -31,7 +29,7 @@ const PostDetails = ({post}) => {
     const classes = useStyles();
 
     return(
-        <div className={classes.root}>
+        <div>
             <Grid container direction="row" justify="flex-start" alignItems="center" spacing={4} className={classes.author}>
                 <Avatar src={face} component={'div'} className={classes.avatar} />
                 <Typography variant="subtitle2" component="subtitle2" className={classes.user}>{post.author}</Typography>

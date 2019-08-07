@@ -9,23 +9,9 @@ const useStyles = makeStyles(theme => ({
         padding: '3rem 0 1rem 3rem',
         width: '55%',
     },
-    author: {
-        marginTop: '1rem'
-    },
-    avatar: {
-        display: 'inline-block',
-        margin: 10,
-        width: 25,
-        height: 25
-    },
     title: {
         padding: '1rem 0 1rem 0',
         fontWeight: 'bold'
-    },
-    date: {
-        fontSize: 10,
-        marginBottom: '1rem',
-        fontStyle: 'oblique'
     },
     image : {
         height: '60vh',

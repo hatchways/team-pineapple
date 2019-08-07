@@ -28,13 +28,7 @@ const useStyles = makeStyles(theme => ({
         display: 'inline-block',
         float: 'right',
         minWidth: 75
-    },
-    label: {
-        padding: 0,
-        margin: 0,
-        fontSize: 14,
-        marginLeft: '1rem'
-    },
+    }
 }));
 
 const BoardList = ({ boards, handleSelect, value, handleSave }) => {
