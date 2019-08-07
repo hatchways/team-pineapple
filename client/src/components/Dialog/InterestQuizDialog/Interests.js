@@ -2,10 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
+import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 
 import backyard from '../../../assets/interests/back.jpg';
 import decor from '../../../assets/interests/decor.jpg';
@@ -22,7 +20,35 @@ const useStyles = makeStyles(theme => ({
         flexWrap: 'wrap',
         justifyContent: 'space-around',
         overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.paper
+    },
+    image: {
+        borderRadius: '0.5vw'
+    },
+    title: {
+        padding: '1rem 0 1rem 0',
+        fontWeight: 'bold',
+        fontSize: 12,
+        color: '#fafafa',
+        position: 'absolute',
+        bottom: -10,
+        left: 0,
+        width: '100%',
+        textAlign: 'center'
+    },
+    check: {
+        position: 'absolute',
+        top: 10,
+        right: 10
+    },
+    select: {
+        width: 14,
+        height: 14,
+        margin: '0 auto',
+        padding: '0 6px'
+    },
+    label: {
+        width: 0, padding: 0
     }
 }));
 
@@ -37,15 +63,23 @@ const interests = [
     { image: garden, title: 'Garden' },
 ];
 
-const Interests = () => {
+const Interests = ({handleChange, selected}) => {
     const classes = useStyles();
 
     return(
         <div className={classes.root}>
-            <GridList className={classes.gridList} cols={4}>
-                {interests.map(interest => (
-                    <GridListTile key={interest.image} rows={2} cols={4}>
-                        <img src={interest.image} alt={interest.title} />
+            <GridList cols={4} spacing={20}>
+                {interests.map((interest, i) => (
+                    <GridListTile key={i} classes={{tile:classes.image}} onClick={()=> handleChange(interest.title)} >
+                        <img src={interest.image} alt={interest.title} className={classes.image} />
+                        <p className={classes.title}>{interest.title}</p>
+                        {
+                            selected.includes(interest.title) ?
+                                <Chip className={classes.check} component={'div'}
+                                    classes={{colorPrimary: '#f5f5f5', label:classes.label, labelSmall: classes.label}}
+                                    avatar={<DoneIcon className={classes.select} />} size="small"/>
+                                : <div />
+                        }
                     </GridListTile>
                 ))}
             </GridList>

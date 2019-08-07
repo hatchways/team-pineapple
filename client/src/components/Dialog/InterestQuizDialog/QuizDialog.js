@@ -14,10 +14,9 @@ import Interests from './Interests';
 
 const styles = theme => ({
     root: {
-        textAlign: 'center'
-    },
-    title: {
-        marginBottom: theme.spacing(4),
+        textAlign: 'center',
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
     },
     closeButton: {
         position: 'absolute',
@@ -26,7 +25,7 @@ const styles = theme => ({
         color: theme.palette.grey[500],
     },
     button: {
-        margin: '0 auto'
+        margin: '1rem auto'
     }
 });
 
@@ -34,7 +33,8 @@ class QuizDialog extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            open: 'true'
+            open: true,
+            selected: []
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -42,15 +42,21 @@ class QuizDialog extends React.Component {
         this.handleConfirm = this.handleConfirm.bind(this);
     }
 
-    handleChange(e) {
-        const name = e.target.name;
-        const value = e.target.value;
+    handleChange(interest) {
+        let selected = this.state.selected;
+        let index = selected.indexOf(interest);
 
-        this.setState({[name]: value});
+        if (index !== -1) {
+            selected.splice(index, 1);
+        } else if(selected.length <= 6) {
+            selected.push(interest);
+        }
+        this.setState({selected});
     }
 
-    handleConfirm(e) {
-
+    handleConfirm() {
+        console.log(this.state.selected);
+        this.setState({'open': false});
     }
 
     handleClose = () => {
@@ -63,7 +69,7 @@ class QuizDialog extends React.Component {
             <MuiDialogTitle disableTypography className={classes.root}>
                 <Typography variant="h6">{children}</Typography>
                 {onClose ? (
-                    <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={onClose} href={''}>
                         <CloseIcon />
                     </IconButton>
                 ) : null}
@@ -73,7 +79,10 @@ class QuizDialog extends React.Component {
 
     DialogContent = withStyles(theme => ({
         root: {
-            padding: theme.spacing(2),
+            paddingLeft: theme.spacing(8),
+            paddingRight: theme.spacing(8),
+            paddingTop: theme.spacing(2),
+            paddingBottom: theme.spacing(2),
         },
     }))(MuiDialogContent);
 
@@ -85,10 +94,6 @@ class QuizDialog extends React.Component {
         },
     }))(MuiDialogActions);
 
-    componentDidMount = async () => {
-
-    };
-
     render() {
         const { classes } = this.props;
 
@@ -98,10 +103,10 @@ class QuizDialog extends React.Component {
                     Select your interests:
                 </this.DialogTitle>
                 <this.DialogContent>
-                    <Interests />
+                    <Interests handleChange={this.handleChange} selected={this.state.selected} />
                 </this.DialogContent>
                 <this.DialogActions>
-                    <Button onClick={this.handleClose} color="primary" className={classes.button}>
+                    <Button onClick={this.handleConfirm} color="primary" className={classes.button} href={''}>
                         Done!
                     </Button>
                 </this.DialogActions>
