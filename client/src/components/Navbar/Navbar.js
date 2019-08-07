@@ -6,7 +6,7 @@ const useStyles = makeStyles(theme => ({
     header: {
         display: 'grid',
         gridTemplateColumns: '5fr 3fr 6fr 2.5fr 2.5fr 0fr 3fr',
-        minHeight: '20vh',
+        minHeight: '6rem',
         justifyItems: 'center',
         alignItems: 'center'
     },
