@@ -20,7 +20,7 @@ function App () {
         <MuiThemeProvider theme={theme}>
             <BrowserRouter>
                 <Switch>
-                    <Route exact path='/login' component={LogIn} />
+                    <Route exact path='/' component={LogIn} />
                     <Route exact path='/signup' component={SignUp} />
                 </Switch>
                 <Route path='/profile/:username' component={Profile} />
