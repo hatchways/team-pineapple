@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
-import { Route, BrowserRouter } from 'react-router-dom';
+import { Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import { Route, BrowserRouter } from "react-router-dom";
 
+import PostPage from './Post/PostPage';
 import Login from './Login.js';
 import SignUp from './SignUp.js';
 import Profile from './Profile.js';
-// import Ping from "./Ping";
 import PostDialog from '../components/Dialog/PostDialog/PostDialog';
 import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
 
 const landinPageStyle = theme => ({
-    landingContainer: {
-        margin: theme.spacing.unit * 2
-    }
+  landingContainer: {
+    margin: theme.spacing.unit * 2
+  }
 });
 
 class LandingPage extends Component {
-  state = {
-      placeholder: ''
-  };
-
   render() {
       return (
           <div>
@@ -30,7 +27,8 @@ class LandingPage extends Component {
                   <Route path='/profile/:username' component={Profile}/>
                   <Route exact path = "/profile/:username/post/create" component = {PostDialog}/>
                   <Route exact path = "/profile/:username/board/create" component = {BoardDialog}/>
-              </BrowserRouter>        
+                  <Route path='/post/:id' component={PostPage}/>
+              </BrowserRouter>
           </div>
       );
   }
