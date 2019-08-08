@@ -10,6 +10,9 @@ import axios from 'axios';
 
 import './InterestQuizStyle.css'
 
+//component can be removed. Only used to visualize scripting. 
+//functionality can be added or edited to fit UI code after PR'S are done
+
 class InterestQuiz extends Component {
     constructor() {
         super()
