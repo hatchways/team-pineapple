@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { theme } from './themes/theme';
 
-import LogIn from './pages/Landing';
+import LogIn from './pages/Login';
 import SignUp from './pages/SignUp.js';
 import Profile from './pages/Profile.js';
 import NotFound from './pages/NotFound.js';
@@ -13,8 +13,9 @@ import PostDialog from './components/Dialog/PostDialog/PostDialog';
 import BoardDialog from './components/Dialog/BoardDialog/BoardDialog';
 
 import './App.css';
+import PostPage from './pages/Post/PostPage';
 
-function App() {
+function App () {
     return (
         <MuiThemeProvider theme={theme}>
             <BrowserRouter>
@@ -25,6 +26,7 @@ function App() {
                 <Route path='/profile/:username' component={Profile} />
                 <Route path='/profile/:username/post/create' component={PostDialog} />
                 <Route path='/profile/:username/board/create' component={BoardDialog} />
+                <Route path='/post/:id' component={PostPage}/>
                 <Route component = {NotFound} />
             </BrowserRouter>
         </MuiThemeProvider>
