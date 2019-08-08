@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper
     },
     image: {
-        borderRadius: '0.5vw'
+        borderRadius: 10
     },
     title: {
         padding: '1rem 0 1rem 0',
