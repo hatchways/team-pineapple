@@ -193,7 +193,7 @@ const SignUp = ({ history }) => {
                     </button>
                     <p className={style.footer}>
                         Already a Member?{' '}
-                        <Link to='/' className={style.login}>
+                        <Link to='/login' className={style.login}>
                             Log In!
                         </Link>
                     </p>

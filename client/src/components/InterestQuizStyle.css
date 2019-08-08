@@ -1,0 +1,25 @@
+.dialog {
+    min-width: 50vw;
+    min-height: 50vh;
+}
+
+.interestdiv {
+    width: 130px;
+    height: 130px;
+}
+
+.interestscontainer {
+    display: grid;
+    padding: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.donebutton {
+    border: 1px solid lightgrey;
+    border-radius: 40px;
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
