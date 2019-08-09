@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/styles';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Paper } from '@material-ui/core';
-import { Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Login from '../components/Dialog/Login/Login';
 
 const styles = theme => ({
@@ -55,9 +55,7 @@ class Home extends React.Component {
                     <Paper className={classes.card} />
                     <Paper className={classes.card} />
                 </div>
-                <Switch>
-                    <Route path={'/login'} component={Login} />
-                </Switch>
+                <Route path={'/login'} component={Login} />
             </div>
         );
     }
