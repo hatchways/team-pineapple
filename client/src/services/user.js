@@ -6,6 +6,8 @@ export const userService = {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', res.data.user);
             return res.data;
+        }).catch(err => {
+            throw err;
         });
     },
     getUser: () => {
