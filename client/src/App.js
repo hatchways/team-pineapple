@@ -11,7 +11,6 @@ import Home from './pages/Home';
 import SignUp from './pages/SignUp.js';
 import Profile from './pages/Profile.js';
 
-import NotFound from './pages/NotFound.js';
 import PostPage from './pages/Post/PostPage';
 import { getToken } from './actions/userActions';
 
@@ -24,12 +23,11 @@ class App extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <BrowserRouter>
+                    <Route path='/' component={Home} />
                     <Switch>
-                        <Route path='/' component={Home} />
                         <Route path='/post/:id' component={PostPage} />
                         <Route path='/profile/:username' component={Profile} />
                         <Route exact path='/signup' component={SignUp} />
-                        <Route path='/' component={NotFound} />
                     </Switch>
                 </BrowserRouter>
             </MuiThemeProvider>
