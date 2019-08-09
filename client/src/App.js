@@ -11,11 +11,6 @@ import Profile from './pages/Profile.js';
 import NotFound from './pages/NotFound.js';
 import PostPage from './pages/Post/PostPage';
 
-import Login from './components/Dialog/Login/Login';
-import PostDialog from './components/Dialog/PostDialog/PostDialog';
-import BoardDialog from './components/Dialog/BoardDialog/BoardDialog';
-import InterestQuizDialog from './components/Dialog/InterestQuizDialog/QuizDialog';
-
 function App () {
     return (
         <MuiThemeProvider theme={theme}>
@@ -24,13 +19,9 @@ function App () {
                     <Route exact path='/' component={Home} />
                     <Route path='/post/:id' component={PostPage} />
                     <Route path='/profile/:username' component={Profile} />
-                    <Route exact path='/' component={NotFound} />
+                    <Route exact path='/signup' component={SignUp} />
+                    <Route path='/' component={NotFound} />
                 </Switch>
-                <Route exact path='/login' component={Login} />
-                <Route exact path='/signup' component={SignUp} />
-                <Route exact path='/interest-quiz' component={InterestQuizDialog} />
-                <Route path='/profile/:username/post/create' component={PostDialog} />
-                <Route path='/profile/:username/board/create' component={BoardDialog} />
             </BrowserRouter>
         </MuiThemeProvider>
     );
