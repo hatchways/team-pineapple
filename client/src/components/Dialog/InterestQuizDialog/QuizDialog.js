@@ -66,7 +66,8 @@ class QuizDialog extends React.Component {
                 interests: this.state.selected
             };
             const config = {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'access-token': this.props.userStore.token
             };
             const res = await axios.put(`users/${username}/interests`, body, config);
             if (res.data.success) {
