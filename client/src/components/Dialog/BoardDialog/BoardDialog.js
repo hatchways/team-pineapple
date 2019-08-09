@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -35,7 +36,8 @@ class BoardDialog extends Component {
                     title: this.state.name
                 };
                 const config = {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    headers: { 'access-token': this.props.userStore.token }
                 };
                 const res = await axios.post(`/users/${username}/board`, body, config);
                 if (res.data.success) {
@@ -93,4 +95,8 @@ class BoardDialog extends Component {
     }
 }
 
-export default BoardDialog;
+const mapStateToProps = state => ({
+    userStore: state.UserStore
+});
+
+export default connect(mapStateToProps)(BoardDialog);

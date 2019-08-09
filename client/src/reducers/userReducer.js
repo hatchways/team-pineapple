@@ -1,6 +1,6 @@
 import {
     LOGIN_USER_SUCCESS,
-    LOGIN_USER_ERROR
+    LOGIN_USER_ERROR, GET_TOKEN_SUCCESS
 } from '../actions/types';
 
 const initialState = {
@@ -16,6 +16,8 @@ export default (state = initialState, action) => {
         return { authenticated: true, user: response.user, token: response.token };
     case LOGIN_USER_ERROR:
         return { ...state, ...response };
+    case GET_TOKEN_SUCCESS:
+        return { ...state, authenticated: true, user: action.user, token: action.token };
     default:
         return state;
     }

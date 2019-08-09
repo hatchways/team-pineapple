@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -30,7 +31,9 @@ class PostDialog extends React.Component {
     componentDidMount = async () => {
         try {
             const username = this.props.location.pathname.split('/')[2];
-            const res = await axios.get(`/users/${username}`);
+            const res = await axios.get(`/users/${username}`, {
+                headers: { 'access-token': this.props.userStore.token }
+            });
             if (res.data.user.boards) {
                 return this.setState({ boards: res.data.user.boards });
             }
@@ -95,7 +98,7 @@ class PostDialog extends React.Component {
         } else {
             try {
                 const formData = new FormData();
-                formData.append('board', this.state.selectedBoard._id);
+                // formData.append('board', this.state.selectedBoard._id);
                 formData.append('title', title);
                 formData.append('tags', tags);
                 formData.append('description', description);
@@ -106,13 +109,15 @@ class PostDialog extends React.Component {
                     method: 'POST',
                     data: formData,
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'multipart/form-data',
+                        'access-token': this.props.userStore.token
                     }
                 });
 
                 this.props.history.push(`/profile/${username}`);
             } catch (err) {
                 console.log('Something went wrong with creating a post');
+                console.log(err);
             }
         }
     };
@@ -172,4 +177,8 @@ class PostDialog extends React.Component {
     }
 }
 
-export default PostDialog;
+const mapStateToProps = state => ({
+    userStore: state.UserStore
+});
+
+export default connect(mapStateToProps)(PostDialog);
