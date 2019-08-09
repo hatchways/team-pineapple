@@ -27,6 +27,10 @@ export function * loginSaga () {
 }
 
 function * getToken (request) {
+    const userStore = yield select(getUserStore);
+    if (userStore.token) {
+
+    }
     const token = yield call(userService.getToken);
     if (token) {
         const user = yield call(userService.getUser);

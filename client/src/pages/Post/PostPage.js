@@ -7,6 +7,7 @@ import Post from './Post';
 import MorePosts from './MorePosts';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { getBoardsandPosts } from '../../actions/userActions';
 
 const styles = theme => ({
     post: {
@@ -21,11 +22,17 @@ class PostPage extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
+            id: '',
             board: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.save = this.save.bind(this);
+    }
+
+    componentDidMount () {
+        const id = this.props.match.params.id;
+        this.setState({ id });
     }
 
     handleChange (e) {
@@ -41,23 +48,23 @@ class PostPage extends React.Component {
     }
 
     render () {
-        // eslint-disable-next-line react/prop-types
         const { classes } = this.props;
+
+        if (!this.props.userStore.boards) {
+            this.props.getBoardsandPosts(this.props.userStore.user.username);
+            return (
+                <div>
+                    <Navbar/>
+                    <CircularProgress/>
+                </div>
+            );
+        }
 
         // eslint-disable-next-line react/prop-types
         if (!this.props.post(this.props.match.params.id)) {
             return (
                 <div>
                     <h1>No Post found</h1>
-                </div>
-            );
-        }
-
-        if (!this.props.userStore.boards) {
-            return (
-                <div>
-                    <Navbar/>
-                    <CircularProgress/>
                 </div>
             );
         }
@@ -92,7 +99,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps (dispatch) {
     return bindActionCreators(
         {
-
+            getBoardsandPosts
         },
         dispatch
     );

@@ -7,13 +7,15 @@ import { Card, Typography } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import house from '../assets/house.png';
-import { Link, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
 import PostDialog from '../components/Dialog/PostDialog/PostDialog';
 import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
+import Button from '@material-ui/core/Button';
 import { getBoardsandPosts } from '../actions/userActions';
+import Posts from '../components/Posts/Posts';
 
 const styles = theme => ({
     subHeader: {
@@ -44,21 +46,8 @@ const styles = theme => ({
         padding: '0',
         paddingTop: '5px'
     },
-    createBoard: {
-        background: 'white',
-        border: '1px solid lightgrey',
-        borderRadius: '25px',
-        padding: '10px 20px 10px 20px',
-        fontWeight: 'bold',
-        marginRight: '10px'
-    },
-    createPost: {
-        background: 'black',
-        color: 'white',
-        border: 'none',
-        borderRadius: '25px',
-        padding: '10px 20px 10px 20px',
-        fontWeight: 'bold'
+    button: {
+        margin: '0 0.5rem'
     },
     tabSection: {
         minHeight: '25vh',
@@ -164,7 +153,7 @@ class Profile extends Component {
     render () {
         const { classes } = this.props;
 
-        if (!this.props.userStore.boards || !this.props.userStore.posts) {
+        if (!this.props.userStore.boards) {
             return (
                 <div>
                     <Navbar/>
@@ -175,10 +164,10 @@ class Profile extends Component {
 
         return (
             <div>
-                <Navbar/>
                 <Route path='/profile/:username/interest-quiz' component={InterestQuizDialog}/>
                 <Route path='/profile/:username/post/create' component={PostDialog}/>
                 <Route path='/profile/:username/board/create' component={BoardDialog}/>
+                <Navbar/>
                 <div className={classes.subHeader}>
                     <div className={classes.nameContainer}>
                         <img src={face} alt='' className={classes.subHeaderIcon}/>
@@ -189,12 +178,12 @@ class Profile extends Component {
                     </div>
                     <div/>
                     <div>
-                        <Link to={`/profile/${this.state.username}/board/create`}>
-                            <button className={classes.createBoard}>Create Board</button>
-                        </Link>
-                        <Link to={`/profile/${this.state.username}/post/create`}>
-                            <button className={classes.createPost}>Create Post</button>
-                        </Link>
+                        <Button color="primary" className={classes.button} onClick={() => {
+                            this.props.history.push(`/profile/${this.state.username}/board/create`);
+                        }}>Create Post</Button>
+                        <Button color="primary" className={classes.button} variant={'contained'} onClick={() => {
+                            this.props.history.push(`/profile/${this.state.username}/post/create`);
+                        }}>Create Post</Button>
                     </div>
                 </div>
                 <div style={{ display: this.state.activePanel === 'board' ? 'grid' : 'none' }}>
@@ -262,17 +251,7 @@ class Profile extends Component {
                             {
                                 this.props.userStore.posts.length === 0
                                     ? <h2>You have not added any posts yet.</h2>
-                                    : this.props.userStore.posts.map((post, i) => {
-                                        return <Card key={i} className={classes.post}>
-                                            <CardActionArea className={classes.post}>
-                                                <CardMedia className={classes.postImg} image={post['image']}>
-                                                    <p className={classes.postLink}>
-                                                        {post['link']}
-                                                    </p>
-                                                </CardMedia>
-                                            </CardActionArea>
-                                        </Card>;
-                                    })
+                                    : <Posts posts={this.props.userStore.posts}/>
                             }
                         </div>
                     </div>

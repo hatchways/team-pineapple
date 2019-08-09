@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Profile = () => {
+const Navbar = () => {
     const style = useStyles();
     return (
         <div>
@@ -66,4 +66,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default Navbar;

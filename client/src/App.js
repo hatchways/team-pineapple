@@ -13,9 +13,11 @@ import Profile from './pages/Profile.js';
 
 import PostPage from './pages/Post/PostPage';
 import { getToken } from './actions/userActions';
+import Login from './components/Dialog/Login/Login';
 
 class App extends Component {
-    componentDidMount () {
+    constructor (props) {
+        super(props);
         this.props.getToken();
     }
 
@@ -23,8 +25,9 @@ class App extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <Route path='/' component={Home} />
                     <Switch>
+                        <Route exact path='/' component={Home}/>
+                        <Route exact path='/login' component={Login}/>
                         <Route path='/posts/:id' component={PostPage}/>
                         <Route path='/profile/:username' component={Profile} />
                         <Route exact path='/signup' component={SignUp} />

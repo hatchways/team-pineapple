@@ -41,7 +41,7 @@ class BoardDialog extends Component {
                 };
                 const res = await axios.post(`/users/${username}/board`, body, config);
                 if (res.data.success) {
-                    return this.props.history.push('/');
+                    return this.props.history.push('/profile/' + username);
                 }
                 // Snackbar show alert
                 console.log('Something went wrong with the post request');
