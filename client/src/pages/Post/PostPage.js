@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import Post from './Post';
 import MorePosts from './MorePosts';
 import Divider from '@material-ui/core/Divider';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
     post: {
@@ -48,6 +49,15 @@ class PostPage extends React.Component {
             return (
                 <div>
                     <h1>No Post found</h1>
+                </div>
+            );
+        }
+
+        if (!this.props.userStore.boards) {
+            return (
+                <div>
+                    <Navbar/>
+                    <CircularProgress/>
                 </div>
             );
         }

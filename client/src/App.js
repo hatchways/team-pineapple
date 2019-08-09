@@ -25,7 +25,7 @@ class App extends Component {
                 <BrowserRouter>
                     <Route path='/' component={Home} />
                     <Switch>
-                        <Route path='/post/:id' component={PostPage} />
+                        <Route path='/posts/:id' component={PostPage}/>
                         <Route path='/profile/:username' component={Profile} />
                         <Route exact path='/signup' component={SignUp} />
                     </Switch>

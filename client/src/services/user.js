@@ -31,5 +31,12 @@ export const userService = {
         }
 
         return null;
+    },
+    getBoardsandPosts: ({ username, token }) => {
+        return axios.get('/users/' + username, { headers: { 'access-token': token } }).then(res => {
+            return res.data;
+        }).catch(err => {
+            throw err;
+        });
     }
 };

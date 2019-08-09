@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import face from '../assets/face.jpg';
-import { Card, Typography } from '@material-ui/core';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import house from '../assets/house.png';
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/styles';
+import { compose, bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import face from '../assets/face.jpg';
 import { Card, Typography } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -12,9 +9,11 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import house from '../assets/house.png';
 import { Link, Route } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
 import PostDialog from '../components/Dialog/PostDialog/PostDialog';
 import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
+import { getBoardsandPosts } from '../actions/userActions';
 
 const styles = theme => ({
     subHeader: {
@@ -137,124 +136,150 @@ const styles = theme => ({
     }
 });
 
-// eslint-disable-next-line react/prop-types
-const Profile = ({ classes, userStore, location }) => {
-    const username = location.pathname.split('/')[2];
+class Profile extends Component {
+    constructor (props) {
+        super(props);
 
-    let [activePanel, toggle] = useState('board');
-    let [boards, posts] = useState([
+        this.state = {
+            username: '',
+            activePanel: 'board'
+        };
+        this.toggle = this.toggle.bind(this);
+    }
 
-    ]);
+    componentDidMount () {
+        const username = this.props.match.params.username;
+        this.setState({ username: username });
+        this.props.getBoardsandPosts(username);
+    }
 
-    useEffect(() => {
-        console.log(userStore.user);
-        // boards = userStore.user.board;
-    });
+    toggle () {
+        if (this.state.activePanel === 'board') {
+            this.setState({ activePanel: 'post' });
+        } else {
+            this.setState({ activePanel: 'board' });
+        }
+    }
 
-    return (
-        <div>
-            <Navbar />
-            <Route path='/profile/:username/interest-quiz' component={InterestQuizDialog} />
-            <Route path='/profile/:username/post/create' component={PostDialog} />
-            <Route path='/profile/:username/board/create' component={BoardDialog} />
-            {/*<div className={classes.subHeader}>*/}
-            {/*    <div className={classes.nameContainer}>*/}
-            {/*        <img src={face} alt='' className={classes.subHeaderIcon} />*/}
-            {/*        <div>*/}
-            {/*            <h3 className={classes.profileName}>{username}</h3>*/}
-            {/*            <h5 className={classes.profileFollowers}>134 Followers | 280 Following</h5>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*    <div />*/}
-            {/*    <div>*/}
-            {/*        <Link to={`/profile/${username}/board/create`}>*/}
-            {/*            <button className={classes.createBoard}>Create Board</button>*/}
-            {/*        </Link>*/}
-            {/*        <Link to={`/profile/${username}/post/create`}>*/}
-            {/*            <button className={classes.createPost}>Create Post</button>*/}
-            {/*        </Link>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<div style={{ display: activePanel === 'board' ? 'grid' : 'none' }}>*/}
-            {/*    <div className={classes.tabSection}>*/}
-            {/*        <div>*/}
-            {/*            <button*/}
-            {/*                className={classes.activeTab}*/}
-            {/*                onClick={() => toggle((activePanel = 'board'))}*/}
-            {/*            >*/}
-            {/*                    Boards*/}
-            {/*            </button>*/}
-            {/*            <button*/}
-            {/*                className={classes.tab}*/}
-            {/*                onClick={() => toggle((activePanel = 'post'))}*/}
-            {/*            >*/}
-            {/*                    My Posts*/}
-            {/*            </button>*/}
-            {/*        </div>*/}
-            {/*        <div />*/}
-            {/*    </div>*/}
-            {/*    <div className={classes.activePanel}>*/}
-            {/*        <div className={boards.length === 0 ? classes.gridContainer1 : classes.gridContainer}>*/}
-            {/*            {*/}
-            {/*                boards.length === 0*/}
-            {/*                    ? <h2>You have not added any boards yet.</h2>*/}
-            {/*                    : boards.map((board, i) => {*/}
-            {/*                        return <Card key={board['title']} className={classes.card}>*/}
-            {/*                            <CardActionArea className={classes.card}>*/}
-            {/*                                <CardMedia className={classes.cardImg} image={house} />*/}
-            {/*                                <Typography variant='h6' className={classes.cardHeader}>*/}
-            {/*                                    {board['title']}*/}
-            {/*                                </Typography>*/}
-            {/*                                <Typography variant='p' className={classes.cardHeader}>*/}
-            {/*                                    {board['posts'].length} posts*/}
-            {/*                                </Typography>*/}
-            {/*                            </CardActionArea>*/}
-            {/*                        </Card>;*/}
-            {/*                    })*/}
-            {/*            }*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<div style={{ display: activePanel === 'post' ? 'grid' : 'none' }}>*/}
-            {/*    <div className={classes.tabSection}>*/}
-            {/*        <div>*/}
-            {/*            <button*/}
-            {/*                className={classes.tab}*/}
-            {/*                onClick={() => toggle((activePanel = 'board'))}*/}
-            {/*            >*/}
-            {/*                    Boards*/}
-            {/*            </button>*/}
-            {/*            <button*/}
-            {/*                className={classes.activeTab}*/}
-            {/*                onClick={() => toggle((activePanel = 'post'))}*/}
-            {/*            >*/}
-            {/*                    My Posts*/}
-            {/*            </button>*/}
-            {/*        </div>*/}
-            {/*        <div />*/}
-            {/*    </div>*/}
-            {/*    <div className={classes.activePanel}>*/}
-            {/*        <div className={posts.length === 0 ? classes.postContainer1 : classes.postContainer}>*/}
-            {/*            {*/}
-            {/*                posts.length === 0*/}
-            {/*                    ? <h2>You have not added any posts yet.</h2>*/}
-            {/*                    : posts.map((post, i) => {*/}
-            {/*                        return <Card key={post['title']} className={classes.post}>*/}
-            {/*                            <CardActionArea className={classes.post}>*/}
-            {/*                                <CardMedia className={classes.postImg} image={post['image']}>*/}
-            {/*                                    <p className={classes.postLink}>*/}
-            {/*                                        {post['link']}*/}
-            {/*                                    </p>*/}
-            {/*                                </CardMedia>*/}
-            {/*                            </CardActionArea>*/}
-            {/*                        </Card>;*/}
-            {/*                    })*/}
-            {/*            }*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-        </div>
-    );
+    render () {
+        const { classes } = this.props;
+
+        if (!this.props.userStore.boards || !this.props.userStore.posts) {
+            return (
+                <div>
+                    <Navbar/>
+                    <CircularProgress/>
+                </div>
+            );
+        }
+
+        return (
+            <div>
+                <Navbar/>
+                <Route path='/profile/:username/interest-quiz' component={InterestQuizDialog}/>
+                <Route path='/profile/:username/post/create' component={PostDialog}/>
+                <Route path='/profile/:username/board/create' component={BoardDialog}/>
+                <div className={classes.subHeader}>
+                    <div className={classes.nameContainer}>
+                        <img src={face} alt='' className={classes.subHeaderIcon}/>
+                        <div>
+                            <h3 className={classes.profileName}>{this.state.username}</h3>
+                            <h5 className={classes.profileFollowers}>134 Followers | 280 Following</h5>
+                        </div>
+                    </div>
+                    <div/>
+                    <div>
+                        <Link to={`/profile/${this.state.username}/board/create`}>
+                            <button className={classes.createBoard}>Create Board</button>
+                        </Link>
+                        <Link to={`/profile/${this.state.username}/post/create`}>
+                            <button className={classes.createPost}>Create Post</button>
+                        </Link>
+                    </div>
+                </div>
+                <div style={{ display: this.state.activePanel === 'board' ? 'grid' : 'none' }}>
+                    <div className={classes.tabSection}>
+                        <div>
+                            <button
+                                className={classes.activeTab}
+                                onClick={this.toggle}
+                            >
+                                Boards
+                            </button>
+                            <button
+                                className={classes.tab}
+                                onClick={this.toggle}
+                            >
+                                My Posts
+                            </button>
+                        </div>
+                        <div/>
+                    </div>
+                    <div className={classes.activePanel}>
+                        <div
+                            className={this.props.userStore.boards.length === 0 ? classes.gridContainer1 : classes.gridContainer}>
+                            {
+                                this.props.userStore.boards.length === 0
+                                    ? <h2>You have not added any boards yet.</h2>
+                                    : this.props.userStore.boards.map((board, i) => {
+                                        return <Card key={i} className={classes.card}>
+                                            <CardActionArea className={classes.card}>
+                                                <CardMedia className={classes.cardImg} image={house}/>
+                                                <Typography variant='h6' className={classes.cardHeader}>
+                                                    {board['title']}
+                                                </Typography>
+                                                <Typography variant='body1' className={classes.cardHeader}>
+                                                    {board['posts'].length} posts
+                                                </Typography>
+                                            </CardActionArea>
+                                        </Card>;
+                                    })
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div style={{ display: this.state.activePanel === 'post' ? 'grid' : 'none' }}>
+                    <div className={classes.tabSection}>
+                        <div>
+                            <button
+                                className={classes.tab}
+                                onClick={this.toggle}
+                            >
+                                Boards
+                            </button>
+                            <button
+                                className={classes.activeTab}
+                                onClick={this.toggle}
+                            >
+                                My Posts
+                            </button>
+                        </div>
+                        <div/>
+                    </div>
+                    <div className={classes.activePanel}>
+                        <div
+                            className={this.props.userStore.posts.length === 0 ? classes.postContainer1 : classes.postContainer}>
+                            {
+                                this.props.userStore.posts.length === 0
+                                    ? <h2>You have not added any posts yet.</h2>
+                                    : this.props.userStore.posts.map((post, i) => {
+                                        return <Card key={i} className={classes.post}>
+                                            <CardActionArea className={classes.post}>
+                                                <CardMedia className={classes.postImg} image={post['image']}>
+                                                    <p className={classes.postLink}>
+                                                        {post['link']}
+                                                    </p>
+                                                </CardMedia>
+                                            </CardActionArea>
+                                        </Card>;
+                                    })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 };
 
 const mapStateToProps = state => ({
@@ -264,7 +289,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps (dispatch) {
     return bindActionCreators(
         {
-            // TODO: redux integration
+            getBoardsandPosts
         },
         dispatch
     );
