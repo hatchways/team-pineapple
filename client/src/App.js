@@ -24,8 +24,8 @@ class App extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <Route path='/' component={Home} />
                     <Switch>
+                        <Route path='/' component={Home} />
                         <Route path='/post/:id' component={PostPage} />
                         <Route path='/profile/:username' component={Profile} />
                         <Route exact path='/signup' component={SignUp} />

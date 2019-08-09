@@ -4,14 +4,14 @@ export const userService = {
     login: (user) => {
         return axios.post('/users/login', user).then(res => {
             localStorage.setItem('token', res.data.token);
-            localStorage.setItem('user', res.data.user);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
             return res.data;
         }).catch(err => {
             throw err;
         });
     },
     getUser: () => {
-        return localStorage.getItem('user');
+        return JSON.parse(localStorage.getItem('user'));
     },
     logout: () => {
         localStorage.clear();
