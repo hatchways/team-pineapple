@@ -1,11 +1,12 @@
 import {
     LOGIN_USER_SUCCESS,
-    LOGIN_USER_ERROR, GET_TOKEN_SUCCESS, GET_USER_BOARDS_POSTS_SUCCESS
+    LOGIN_USER_ERROR, GET_TOKEN_SUCCESS,
+    GET_USER_BOARDS_POSTS_SUCCESS, GET_USER_BOARDS_POSTS_ERROR,
+    ADD_BOARD_SUCCESS, ADD_BOARD_ERROR
 } from '../actions/types';
 
 const initialState = {
     authenticated: false
-    // boards: [{ title: '1', _id: '1234' }, { title: '2', _id: '567' }, { title: '3', _id: '8910' }]
 };
 
 export default (state = initialState, action) => {
@@ -20,6 +21,13 @@ export default (state = initialState, action) => {
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case GET_USER_BOARDS_POSTS_SUCCESS:
         return { ...state, boards: response.user.boards, posts: response.user.posts };
+    case GET_USER_BOARDS_POSTS_ERROR:
+        return { ...state, error: action.err };
+    case ADD_BOARD_SUCCESS:
+        state.boards.push(response.board);
+        return { ...state };
+    case ADD_BOARD_ERROR:
+        return { ...state, error: action.err };
     default:
         return state;
     }

@@ -88,7 +88,7 @@ class QuizDialog extends React.Component {
                     <Interests handleChange={this.handleChange} selected={this.state.selected} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleConfirm} color="primary" className={classes.button} href={''}>
+                    <Button onClick={this.handleConfirm} color="primary" className={classes.button}>
                         Done!
                     </Button>
                 </DialogActions>

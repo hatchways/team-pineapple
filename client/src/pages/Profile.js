@@ -180,7 +180,7 @@ class Profile extends Component {
                     <div>
                         <Button color="primary" className={classes.button} onClick={() => {
                             this.props.history.push(`/profile/${this.state.username}/board/create`);
-                        }}>Create Post</Button>
+                        }}>Create Board</Button>
                         <Button color="primary" className={classes.button} variant={'contained'} onClick={() => {
                             this.props.history.push(`/profile/${this.state.username}/post/create`);
                         }}>Create Post</Button>
