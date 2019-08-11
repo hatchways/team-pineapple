@@ -60,7 +60,6 @@ class PostPage extends React.Component {
             );
         }
 
-        // eslint-disable-next-line react/prop-types
         if (!this.props.post(this.props.match.params.id)) {
             return (
                 <div>
@@ -91,7 +90,15 @@ class PostPage extends React.Component {
 const mapStateToProps = state => ({
     userStore: state.UserStore,
     post: (id) => {
-        return state.PostStore.posts.find((post) => { return id === post._id; });
+        return {
+            ...state.UserStore.posts.find((post) => {
+                return id === post._id;
+            }),
+            user: { ...state.UserStore.user }
+        } ||
+            state.PostStore.posts.find((post) => {
+                return id === post._id;
+            });
     },
     morePosts: state.PostStore.morePosts
 });

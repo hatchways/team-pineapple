@@ -1,10 +1,16 @@
 import axios from 'axios';
+import { createFormData } from './utils';
+
+const addTokenHeaders = (token) => {
+    axios.defaults.headers.common['access-token'] = token;
+};
 
 export const userService = {
     login: (user) => {
         return axios.post('/users/login', user).then(res => {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
+            addTokenHeaders(res.data.token);
             return res.data;
         }).catch(err => {
             throw err;
@@ -26,6 +32,7 @@ export const userService = {
             const timeStamp = Math.floor(Date.now() / 1000);
 
             if (expireTime.exp - timeStamp > 0) {
+                addTokenHeaders(token);
                 return token;
             }
         }
@@ -41,6 +48,19 @@ export const userService = {
     },
     addBoard: ({ board, username }) => {
         return axios.post('/users/' + username + '/board', board).then(res => {
+            return res.data;
+        }).catch(err => {
+            throw err;
+        });
+    },
+    addPost: ({ post, username }) => {
+        const formData = createFormData(post);
+        return axios({
+            url: '/users/' + username + '/posts',
+            method: 'POST',
+            data: formData,
+            headers: { 'Content-Type': 'multipart/form-data' }
+        }).then(res => {
             return res.data;
         }).catch(err => {
             throw err;

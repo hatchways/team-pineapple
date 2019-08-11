@@ -1,19 +1,12 @@
 import { put, takeLatest, takeEvery, call } from 'redux-saga/effects';
 import {
-    LOGIN,
-    LOGIN_USER_SUCCESS,
-    LOGIN_USER_ERROR,
-    GET_TOKEN,
-    GET_TOKEN_SUCCESS,
-    GET_USER_BOARDS_POSTS,
-    GET_USER_BOARDS_POSTS_SUCCESS,
-    GET_USER_BOARDS_POSTS_ERROR,
-    ADD_BOARD,
-    ADD_BOARD_ERROR,
-    ADD_BOARD_SUCCESS
+    LOGIN, LOGIN_SUCCESS, LOGIN_ERROR,
+    GET_TOKEN, GET_TOKEN_SUCCESS,
+    GET_USER_BOARDS_POSTS, GET_USER_BOARDS_POSTS_SUCCESS, GET_USER_BOARDS_POSTS_ERROR,
+    ADD_BOARD, ADD_BOARD_ERROR, ADD_BOARD_SUCCESS,
+    ADD_POST, ADD_POST_SUCCESS, ADD_POST_ERROR, LOGOUT, LOGOUT_SUCCESS
 } from '../actions/types';
 import { userService } from '../services/user';
-import axios from 'axios';
 
 /*
 call user service login
@@ -22,9 +15,9 @@ call redux with put
 function * login (request) {
     try {
         const response = yield call(userService.login, request.user);
-        yield put({ type: LOGIN_USER_SUCCESS, response });
+        yield put({ type: LOGIN_SUCCESS, response });
     } catch (error) {
-        yield put({ type: LOGIN_USER_ERROR, error });
+        yield put({ type: LOGIN_ERROR, error });
     }
 }
 
@@ -33,11 +26,19 @@ export function * loginSaga () {
     yield takeLatest(LOGIN, login);
 }
 
+function * logout (request) {
+    yield call(userService.logout);
+    yield put({ type: LOGOUT_SUCCESS });
+}
+
+// listen for 'LOGIN' action -> call login*
+export function * logoutSaga () {
+    yield takeLatest(LOGOUT, logout);
+}
+
 function * getToken (request) {
     const token = yield call(userService.getToken);
-    console.log('token_fetch');
     if (token) {
-        axios.defaults.headers.common['access-token'] = token;
         const user = yield call(userService.getUser);
         yield put({ type: GET_TOKEN_SUCCESS, token, user });
     } else {
@@ -74,4 +75,17 @@ function * addBoard (request) {
 
 export function * addBoardSaga () {
     yield takeEvery(ADD_BOARD, addBoard);
+}
+
+function * addPost (request) {
+    try {
+        const response = yield call(userService.addPost, { ...request });
+        yield put({ type: ADD_POST_SUCCESS, response });
+    } catch (err) {
+        yield put({ type: ADD_POST_ERROR, err });
+    }
+}
+
+export function * addPostSaga () {
+    yield takeEvery(ADD_POST, addPost);
 }

@@ -1,8 +1,8 @@
 import {
-    LOGIN_USER_SUCCESS,
-    LOGIN_USER_ERROR, GET_TOKEN_SUCCESS,
+    LOGIN_SUCCESS, LOGOUT_SUCCESS,
+    LOGIN_ERROR, GET_TOKEN_SUCCESS,
     GET_USER_BOARDS_POSTS_SUCCESS, GET_USER_BOARDS_POSTS_ERROR,
-    ADD_BOARD_SUCCESS, ADD_BOARD_ERROR
+    ADD_BOARD_SUCCESS, ADD_BOARD_ERROR, ADD_POST_SUCCESS, ADD_POST_ERROR
 } from '../actions/types';
 
 const initialState = {
@@ -13,10 +13,12 @@ export default (state = initialState, action) => {
     const response = action.response;
 
     switch (action.type) {
-    case LOGIN_USER_SUCCESS:
+    case LOGIN_SUCCESS:
         return { authenticated: true, user: response.user, token: response.token };
-    case LOGIN_USER_ERROR:
+    case LOGIN_ERROR:
         return { ...state, authenticated: false };
+    case LOGOUT_SUCCESS:
+        return { authenticated: false };
     case GET_TOKEN_SUCCESS:
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case GET_USER_BOARDS_POSTS_SUCCESS:
@@ -27,6 +29,11 @@ export default (state = initialState, action) => {
         state.boards.push(response.board);
         return { ...state };
     case ADD_BOARD_ERROR:
+        return { ...state, error: action.err };
+    case ADD_POST_SUCCESS:
+        state.posts.push(response.post);
+        return { ...state };
+    case ADD_POST_ERROR:
         return { ...state, error: action.err };
     default:
         return state;

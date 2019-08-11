@@ -1,8 +1,12 @@
-import { ADD_BOARD, GET_TOKEN, GET_USER_BOARDS_POSTS, LOGIN } from '../actions/types';
+import { ADD_BOARD, ADD_POST, GET_TOKEN, GET_USER_BOARDS_POSTS, LOGIN, LOGOUT } from '../actions/types';
 
 export const login = (user) => ({
     type: LOGIN,
     user
+});
+
+export const logout = () => ({
+    type: LOGOUT
 });
 
 export const getToken = () => ({
@@ -17,5 +21,11 @@ export const getBoardsandPosts = (username) => ({
 export const addBoard = (board, username) => ({
     type: ADD_BOARD,
     board,
+    username
+});
+
+export const addPost = (post, username) => ({
+    type: ADD_POST,
+    post,
     username
 });

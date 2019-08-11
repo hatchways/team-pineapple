@@ -9,37 +9,36 @@ import { Chip } from '@material-ui/core';
 // import CircularProgress from '@material-ui/core/CircularProgress';
 
 import _ from 'lodash';
-import axios from 'axios';
 
 import FormContent from './FormContent';
 import FileUploader from './FileUploader';
+import { bindActionCreators } from 'redux';
+import { getBoardsandPosts, addPost } from '../../../actions/userActions';
 // import BoardList from './BoardList';
 
 class PostDialog extends React.Component {
-    state = {
-        title: '',
-        description: '',
-        destination: '',
-        tag: '',
-        tags: [],
-        tagError: '',
-        titleError: '',
-        selectedBoard: '',
-        files: []
-    };
+    constructor (props) {
+        super(props);
+        this.state = {
+            title: '',
+            description: '',
+            link: '',
+            tag: '',
+            tags: [],
+            tagError: '',
+            titleError: '',
+            board: '',
+            image: '',
+            files: []
+        };
+    }
 
     componentDidMount = async () => {
-        try {
-            const username = this.props.location.pathname.split('/')[2];
-            const res = await axios.get(`/users/${username}`, {
-                headers: { 'access-token': this.props.userStore.token }
-            });
-            if (res.data.user.boards) {
-                return this.setState({ boards: res.data.user.boards });
-            }
-        } catch (err) {
-            console.log('Something went wrong with fetching user API');
+        const username = this.props.match.params.username;
+        if (!this.props.userStore.boards) {
+            getBoardsandPosts(username);
         }
+        this.setState({ username });
     };
 
     onChangeText = e => {
@@ -86,45 +85,21 @@ class PostDialog extends React.Component {
         const filterFiles = fileItems.filter(
             fileItem => fileItem.file.type.toString() === 'image/jpeg'
         );
-        this.setState({ files: filterFiles.map(filterFile => filterFile.file) });
+        this.setState({ image: filterFiles.map(filterFile => filterFile.file)[0] });
     };
 
     // Create post
     onCreatePress = async () => {
-        const username = this.props.location.pathname.split('/')[2];
-        const { title, tags, files = '', description, destination } = this.state;
         if (this.state.title.length < 3) {
             this.setState({ titleError: 'Title must be greater than 3 characters' });
         } else {
-            try {
-                const formData = new FormData();
-                // formData.append('board', this.state.selectedBoard._id);
-                formData.append('title', title);
-                formData.append('tags', tags);
-                formData.append('description', description);
-                formData.append('link', destination);
-                formData.append('image', files[0]);
-                await axios({
-                    url: `/users/${username}/posts`,
-                    method: 'POST',
-                    data: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'access-token': this.props.userStore.token
-                    }
-                });
-
-                this.props.history.push(`/profile/${username}`);
-            } catch (err) {
-                console.log('Something went wrong with creating a post');
-                console.log(err);
-            }
+            this.props.addPost(this.state, this.state.username);
+            this.onCloseClick();
         }
     };
 
     onCloseClick = () => {
-        const username = this.props.location.pathname.split('/')[2];
-        this.props.history.push(`/profile/${username}`);
+        this.props.history.push(`/profile/${this.state.username}`);
     };
 
     render () {
@@ -155,7 +130,7 @@ class PostDialog extends React.Component {
                             tag={this.state.tag}
                             title={this.state.title}
                             description={this.state.description}
-                            destination={this.state.destination}
+                            link={this.state.link}
                         />
                         {this.renderTags()}
                     </DialogContent>
@@ -181,4 +156,14 @@ const mapStateToProps = state => ({
     userStore: state.UserStore
 });
 
-export default connect(mapStateToProps)(PostDialog);
+function mapDispatchToProps (dispatch) {
+    return bindActionCreators(
+        {
+            getBoardsandPosts,
+            addPost
+        },
+        dispatch
+    );
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostDialog);
