@@ -1,10 +1,9 @@
-import { put, takeLatest, takeEvery, call } from 'redux-saga/effects';
+import { put, takeLatest, call } from 'redux-saga/effects';
 import {
     LOGIN, LOGIN_SUCCESS, LOGIN_ERROR,
     GET_TOKEN, GET_TOKEN_SUCCESS,
     GET_USER_BOARDS_POSTS, GET_USER_BOARDS_POSTS_SUCCESS, GET_USER_BOARDS_POSTS_ERROR,
-    ADD_BOARD, ADD_BOARD_ERROR, ADD_BOARD_SUCCESS,
-    ADD_POST, ADD_POST_SUCCESS, ADD_POST_ERROR, LOGOUT, LOGOUT_SUCCESS
+    LOGOUT, LOGOUT_SUCCESS
 } from '../actions/types';
 import { userService } from '../services/user';
 
@@ -62,30 +61,4 @@ function * getBoardsandPosts (request) {
 
 export function * getBoardsPostsSaga () {
     yield takeLatest(GET_USER_BOARDS_POSTS, getBoardsandPosts);
-}
-
-function * addBoard (request) {
-    try {
-        const response = yield call(userService.addBoard, { ...request });
-        yield put({ type: ADD_BOARD_SUCCESS, response });
-    } catch (err) {
-        yield put({ type: ADD_BOARD_ERROR, err });
-    }
-}
-
-export function * addBoardSaga () {
-    yield takeEvery(ADD_BOARD, addBoard);
-}
-
-function * addPost (request) {
-    try {
-        const response = yield call(userService.addPost, { ...request });
-        yield put({ type: ADD_POST_SUCCESS, response });
-    } catch (err) {
-        yield put({ type: ADD_POST_ERROR, err });
-    }
-}
-
-export function * addPostSaga () {
-    yield takeEvery(ADD_POST, addPost);
 }

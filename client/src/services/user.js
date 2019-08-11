@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { createFormData } from './utils';
 
-const addTokenHeaders = (token) => {
+export const addTokenHeaders = (token) => {
     axios.defaults.headers.common['access-token'] = token;
 };
 
@@ -41,26 +40,6 @@ export const userService = {
     },
     getBoardsandPosts: ({ username }) => {
         return axios.get('/users/' + username).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
-    },
-    addBoard: ({ board, username }) => {
-        return axios.post('/users/' + username + '/board', board).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
-    },
-    addPost: ({ post, username }) => {
-        const formData = createFormData(post);
-        return axios({
-            url: '/users/' + username + '/posts',
-            method: 'POST',
-            data: formData,
-            headers: { 'Content-Type': 'multipart/form-data' }
-        }).then(res => {
             return res.data;
         }).catch(err => {
             throw err;
