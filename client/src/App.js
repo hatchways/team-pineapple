@@ -14,6 +14,7 @@ import Profile from './pages/Profile.js';
 import PostPage from './pages/Post/PostPage';
 import { getToken } from './actions/userActions';
 import Login from './components/Dialog/Login/Login';
+import Content from './pages/Content/Content.js';
 
 class App extends Component {
     constructor (props) {
@@ -31,6 +32,7 @@ class App extends Component {
                         <Route path='/posts/:id' component={PostPage}/>
                         <Route path='/profile/:username' component={Profile} />
                         <Route exact path='/signup' component={SignUp} />
+                        <Route exact path='/content' component={Content} />
                     </Switch>
                 </BrowserRouter>
             </MuiThemeProvider>
