@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import './content.css';
 import Masonry from 'react-masonry-component';
+import InterestQuizDialog from '../../components/Dialog/InterestQuizDialog/QuizDialog';
+import { Route } from 'react-router-dom';
 
 import house1 from './house1.jpg';
 import house2 from './house2.jpg';
@@ -25,6 +27,7 @@ class Content extends Component {
         });
         return (
             <div>
+                <Route exact path='/:username/content/interest-quiz' component={InterestQuizDialog}/>
                 <Navbar />
                 <div className='placeholder' />
                 <div className='buttonmenu'>

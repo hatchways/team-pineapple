@@ -30,9 +30,9 @@ class App extends Component {
                         <Route exact path='/' component={Home}/>
                         <Route exact path='/login' component={Login}/>
                         <Route path='/posts/:id' component={PostPage}/>
-                        <Route path='/profile/:username' component={Profile} />
+                        <Route path='/:username/profile' component={Profile} />
                         <Route exact path='/signup' component={SignUp} />
-                        <Route exact path='/content' component={Content} />
+                        <Route exact path='/:username/content' component={Content} />
                     </Switch>
                 </BrowserRouter>
             </MuiThemeProvider>

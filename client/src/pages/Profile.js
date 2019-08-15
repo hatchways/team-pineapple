@@ -10,7 +10,6 @@ import house from '../assets/house.png';
 import { Route } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
 import PostDialog from '../components/Dialog/PostDialog/PostDialog';
 import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
 import Button from '@material-ui/core/Button';
@@ -164,7 +163,6 @@ class Profile extends Component {
 
         return (
             <div>
-                <Route path='/profile/:username/interest-quiz' component={InterestQuizDialog}/>
                 <Route path='/profile/:username/post/create' component={PostDialog}/>
                 <Route path='/profile/:username/board/create' component={BoardDialog}/>
                 <Navbar/>
