@@ -174,7 +174,7 @@ class Profile extends Component {
                 <div className={classes.subHeader}>
                     <div className={classes.nameContainer}>
                         <Avatar className={classes.subHeaderIcon} component={Link} src={face}
-                                to={'/profile/' + user.username + '/edit'}/>
+                            to={'/profile/' + user.username + '/edit'}/>
                         <div>
                             <h3 className={classes.profileName}>{this.state.username}</h3>
                             <h5 className={classes.profileFollowers}>134 Followers | 280 Following</h5>
