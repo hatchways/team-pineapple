@@ -84,6 +84,9 @@ const Navbar = ({ userStore, logout, history }) => {
                     <MenuItem component={Link} to={'/profile/' + userStore.user.username}>
                         Profile
                     </MenuItem>
+                    <MenuItem component={Link} to={'/profile/' + userStore.user.username + '/interest-quiz'}>
+                        Interest Quiz
+                    </MenuItem>
                     <MenuItem
                         component={Link}
                         to='/'
