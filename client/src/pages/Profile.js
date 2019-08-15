@@ -163,8 +163,8 @@ class Profile extends Component {
 
         return (
             <div>
-                <Route path='/profile/:username/post/create' component={PostDialog}/>
-                <Route path='/profile/:username/board/create' component={BoardDialog}/>
+                <Route path='/:username/profile/post/create' component={PostDialog}/>
+                <Route path='/:username/profile/board/create' component={BoardDialog}/>
                 <Navbar/>
                 <div className={classes.subHeader}>
                     <div className={classes.nameContainer}>
@@ -177,10 +177,10 @@ class Profile extends Component {
                     <div/>
                     <div>
                         <Button color="primary" className={classes.button} onClick={() => {
-                            this.props.history.push(`/profile/${this.state.username}/board/create`);
+                            this.props.history.push(`/${this.state.username}/profile/board/create`);
                         }}>Create Board</Button>
                         <Button color="primary" className={classes.button} variant={'contained'} onClick={() => {
-                            this.props.history.push(`/profile/${this.state.username}/post/create`);
+                            this.props.history.push(`/${this.state.username}/profile/post/create`);
                         }}>Create Post</Button>
                     </div>
                 </div>

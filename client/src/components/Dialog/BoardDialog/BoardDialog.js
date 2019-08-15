@@ -49,7 +49,7 @@ class BoardDialog extends Component {
     };
 
     onCloseClick = () => {
-        this.props.history.push(`/profile/${this.state.username}`);
+        this.props.history.push(`/${this.state.username}/profile`);
     };
 
     render () {

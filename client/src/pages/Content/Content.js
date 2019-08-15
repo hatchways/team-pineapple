@@ -27,7 +27,7 @@ class Content extends Component {
         });
         return (
             <div>
-                <Route exact path='/:username/content/interest-quiz' component={InterestQuizDialog}/>
+                <Route path='/:username/content/interest-quiz' component={InterestQuizDialog}/>
                 <Navbar />
                 <div className='placeholder' />
                 <div className='buttonmenu'>

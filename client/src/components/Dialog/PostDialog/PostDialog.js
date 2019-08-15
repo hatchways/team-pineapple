@@ -6,15 +6,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Chip } from '@material-ui/core';
-// import CircularProgress from '@material-ui/core/CircularProgress';
-
 import _ from 'lodash';
 
 import FormContent from './FormContent';
 import FileUploader from './FileUploader';
 import { bindActionCreators } from 'redux';
 import { getBoardsandPosts, addPost } from '../../../actions/userActions';
-// import BoardList from './BoardList';
 
 class PostDialog extends React.Component {
     constructor (props) {
@@ -99,16 +96,10 @@ class PostDialog extends React.Component {
     };
 
     onCloseClick = () => {
-        this.props.history.push(`/profile/${this.state.username}`);
+        this.props.history.push(`/${this.state.username}/profile`);
     };
 
     render () {
-        // for now lets leave this commented out,
-        // because the post dialog will never actually render with this, as we only get
-        // errors from our post requests atm.
-        // if (!Boolean(this.state.boards)) {
-        //     return <CircularProgress color='secondary' />;
-        // }
         return (
             <Dialog
                 open={true}
