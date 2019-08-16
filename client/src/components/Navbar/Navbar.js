@@ -34,12 +34,11 @@ const useStyles = makeStyles(theme => ({
 
 const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
     const [search, setSearch] = React.useState('');
-    const style = useStyles();
+    const classes = useStyles();
 
     function handleLogOutClicked () {
         logout();
-        history.push('/');
-        window.location.reload();
+        history.replace('/');
     }
 
     function handleSearch (event) {
@@ -64,8 +63,8 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
 
     return (
         <div>
-            <div className={style.headerContainer}>
-                <div className={style.header}>
+            <div className={classes.headerContainer}>
+                <div className={classes.header}>
                     <div>
                         <h3>Dream Home</h3>
                     </div>
@@ -84,9 +83,9 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                     <NavMenu user={userStore.user} handleLogOutClicked={handleLogOutClicked}
                         authenticated={userStore.authenticated}/>
                 </div>
-                <div className={style.headerBottomBorder} />
+                <div className={classes.headerBottomBorder}/>
             </div>
-            <div className={style.placeholderHeader}>placeholder</div>
+            <div className={classes.placeholderHeader}>placeholder</div>
         </div>
     );
 };

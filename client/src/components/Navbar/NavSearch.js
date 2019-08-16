@@ -33,12 +33,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const NavSearch = ({ search, handleSearch, handleChange, clear }) => {
-    const style = useStyles();
+    const classes = useStyles();
 
     return (
         <form onSubmit={handleSearch} noValidate>
             <Input
-                className={style.headerSearch}
+                className={classes.headerSearch}
                 placeholder='Search'
                 value={search}
                 onChange={handleChange}
@@ -48,7 +48,7 @@ const NavSearch = ({ search, handleSearch, handleChange, clear }) => {
                     </InputAdornment>
                 }
                 endAdornment={
-                    <InputAdornment position="end" className={style.close} onClick={clear}>
+                    <InputAdornment position="end" className={classes.close} onClick={clear}>
                         <CloseIcon fontSize={'small'}/>
                     </InputAdornment>
                 }

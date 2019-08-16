@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 const NavMenu = ({ authenticated, user, handleLogOutClicked }) => {
     const [open, setMenu] = React.useState(null);
-    const style = useStyles();
+    const classes = useStyles();
 
     function handleClick (event) {
         setMenu(event.currentTarget);
@@ -32,7 +32,7 @@ const NavMenu = ({ authenticated, user, handleLogOutClicked }) => {
         return (
             <>
                 <Avatar
-                    className={style.cornerIcon}
+                    className={classes.cornerIcon}
                     src={user.profile}
                     onClick={handleClick}
                 />
@@ -42,7 +42,7 @@ const NavMenu = ({ authenticated, user, handleLogOutClicked }) => {
                     keepMounted
                     open={Boolean(open)}
                     onClose={handleClose}
-                    className={style.menu}
+                    className={classes.menu}
                 >
                     <MenuItem component={Link} to={'/profile/' + user.username}>
                         Profile
