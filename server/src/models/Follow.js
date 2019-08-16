@@ -23,4 +23,4 @@ const follow = new mongoose.Schema ({
     }
 });
 
-module.exports = mongoose.model ('follow', follow, 'follow');
+module.exports = mongoose.model ('follow', follow);
