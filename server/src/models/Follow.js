@@ -4,11 +4,13 @@ const follow = new mongoose.Schema ({
     followee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
+        index: true,
         required: true
     },
     follower: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
+        index: true,
         required: true
     },
     start: {
