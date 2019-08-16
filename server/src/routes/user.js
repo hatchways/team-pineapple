@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const UserValidation = require('./validate/user');
-const { User, Board, Post, Follow } = require ('../models');
+const { User, Board, Post } = require('../models');
 const upload = require('../services/file-upload');
 const token = require('../middleware/token');
 
@@ -47,7 +47,6 @@ router.post('/login', [UserValidation.login, async (req, res) => {
 
 //authenticated routes below this middleware
 router.use(token());
-
 
 // @route    GET users/:username
 // @desc     Get user profile with all their posts and boards
@@ -187,6 +186,22 @@ router.post('/:username/posts', [upload.single('image'), UserValidation.addPost,
     }
 }]);
 
+
+// @route    POST users/:username/favourite
+// @desc     Add post to user's favourites
+// @access   Private
+router.post ('/:username/favourite', [UserValidation.addPostToFavourites, async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate (req.decoded._id, { '$addToSet': { posts: req.body.post } }, { 'new': true }).lean ();
+        if (!user) {
+            return res.status (404).json ({ success: false, message: 'User not found' });
+        }
+
+        res.status (201).json ({ success: true });
+    } catch (err) {
+        return res.status (400).json ({ success: false, err });
+    }
+}]);
 
 // @route    PUT users/:username/interests
 // @desc     Update user interests
