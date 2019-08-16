@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const UserValidation = require('./validate/user');
-const { User, Board, Post } = require('../models');
+const { User, Board, Post, Follow } = require ('../models');
 const upload = require('../services/file-upload');
 const token = require('../middleware/token');
 
