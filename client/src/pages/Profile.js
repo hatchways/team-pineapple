@@ -3,13 +3,11 @@ import { withStyles } from '@material-ui/styles';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
-import face from '../assets/face.jpg';
 import { Card, Typography } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import house from '../assets/house.png';
 import { Route, Link } from 'react-router-dom';
-import Navbar from '../components/Navbar/Navbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
 import PostDialog from '../components/Dialog/PostDialog/PostDialog';
@@ -165,7 +163,7 @@ class Profile extends Component {
                 <div className={classes.subHeader}>
                     <div className={classes.nameContainer}>
                         <Avatar className={classes.subHeaderIcon} component={Link} src={profileStore.profile}
-                            to={'/profile/' + user.username + '/edit'}/>
+                                to={'/profile/' + profileStore.username + '/edit'}/>
                         <div>
                             <h3 className={classes.profileName}>{this.state.username}</h3>
                             <h5 className={classes.profileFollowers}>134 Followers | 280 Following</h5>
