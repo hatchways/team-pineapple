@@ -192,7 +192,7 @@ router.post('/:username/posts', [upload.single('image'), UserValidation.addPost,
 // @access   Private
 router.post ('/:username/favourite', [UserValidation.addPostToFavourites, async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate (req.decoded._id, { '$addToSet': { posts: req.body.post } }, { 'new': true }).lean ();
+        const user = await User.findByIdAndUpdate (req.decoded._id, { $addToSet: { favourites: req.body.post } }).lean ();
         if (!user) {
             return res.status (404).json ({ success: false, message: 'User not found' });
         }
