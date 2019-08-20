@@ -47,8 +47,9 @@ router.post('/login', [UserValidation.login, async (req, res) => {
 
 // @route    GET users/:username
 // @desc     Get user profile with all their posts and boards
-// @access   Private
+// @access   Public
 router.get ('/:username', [pub, async (req, res) => {
+
     try {
         const user = await User.findOne({ username: req.params.username }).select('-password').populate('boards').populate('posts').lean();
         if (!user) {
@@ -63,6 +64,8 @@ router.get ('/:username', [pub, async (req, res) => {
 //authenticated routes below this middleware
 router.use (auth);
 
+//authenticated routes below this middleware
+router.use (token ());
 
 // @route    PUT users/:username
 // @desc     Update user image and/or name
@@ -120,24 +123,24 @@ router.post ('/unfollow', [UserValidation.unfollowUser, async (req, res) => {
     }
 }]);
 
-// @route    GET users/:username/following
+// @route    GET users/:id/following
 // @desc     get users who are following specified user
 // @access   Private
-router.get ('/:username/following', async (req, res) => {
+router.get ('/:id/following', async (req, res) => {
     try {
-        const following = await User.following (req.decoded._id);
+        const following = await User.following (req.params.id);
         return res.status (200).json ({ success: true, following });
     } catch (err) {
         return res.status (400).json ({ success: false });
     }
 });
 
-// @route    GET users/:username/followers
+// @route    GET users/:id/followers
 // @desc     get specified user's followers
 // @access   Private
-router.get ('/:username/followers', async (req, res) => {
+router.get ('/:id/followers', async (req, res) => {
     try {
-        const followers = await User.followers (req.decoded._id);
+        const followers = await User.followers (req.params.id);
         return res.status (200).json ({ success: true, followers });
     } catch (err) {
         return res.status (400).json ({ success: false });
@@ -203,6 +206,7 @@ router.post ('/:username/favourite', [UserValidation.addPostToFavourites, async 
     }
 }]);
 
+
 // @route    PUT users/:username/interests
 // @desc     Update user interests
 // @access   Private
@@ -235,8 +239,8 @@ router.put('/:username/interests', async (req,res) => {
 router.put('/board/:id', async (req,res) => {
     try {
         const board = await Board.findById(req.params.id);
-        if(board.user.toString() !== req.decoded.users._id.toString()) {
-            return res.status(404).json({msg: 'You do not have the authorization to add to this board'});
+        if (board.user.toString () !== req.decoded._id.toString ()) {
+            return res.status (403).json ({ msg: 'You do not have the authorization to add to this board' });
         }
         // Check to see if there is a board with that id
         if(!board) {
@@ -256,7 +260,7 @@ router.put('/board/:id', async (req,res) => {
         if(err.kind === 'ObjectId') {
             return res.status(404).json({msg: 'The board or post does not exist'});
         }
-        return res.status(500).send('Server Error');
+        return res.status (500).send (err);
     }
 });
 
