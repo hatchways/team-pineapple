@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const UserValidation = require('./validate/user');
+const BoardValidation = require ('./validate/board');
 const { User, Board, Post, Follow } = require ('../models');
 const upload = require('../services/file-upload');
 const { auth, pub } = require ('../middleware');
 
+const _ = require('lodash');
 
 // @route    POST users/register
 // @desc     register
@@ -48,7 +50,7 @@ router.post('/login', [UserValidation.login, async (req, res) => {
 // @route    GET users/:username
 // @desc     Get user profile with all their posts and boards
 // @access   Public
-router.get ('/:username', [pub,async (req, res) => {
+router.get ('/:username', [pub, async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username }).select('-password').populate('boards').populate('posts').lean();
         if (!user) {
@@ -59,6 +61,28 @@ router.get ('/:username', [pub,async (req, res) => {
         return res.status(400).json({ success: false, message: err });
     }
 }]);
+
+// @route    GET users/:user_id/board/:board_id
+// @desc     gets posts from user id and board id
+// @access   Public
+router.get ('/:user_id/board/:board_id', [BoardValidation.getPosts, async (req, res) => {
+    try {
+        const board = await Board.findOne ({
+            _id: req.params.board_id,
+            user: req.params.user_id
+        }).populate ('posts', 'title image description tags').lean ();
+        if (!board) {
+            return res.status (404).json ({ success: false, message: 'no board found' });
+        } else if (!board.posts.length) {
+            return res.status (404).json ({ success: false, message: 'no posts found' });
+        }
+
+        return res.status (200).json ({ success: true, posts: board.posts });
+    } catch (err) {
+        return res.status (400).json ({ success: false, err });
+    }
+}]);
+
 
 //authenticated routes below this middleware
 router.use (auth);
@@ -168,14 +192,21 @@ router.post('/:username/board', [UserValidation.addBoard, async (req, res) => {
 // @route    POST users/:username/posts
 // @desc     Create new post
 // @access   Private
-router.post('/:username/posts', [upload.single('image'), UserValidation.addPost, async (req, res) => {
+router.post('/:username/posts', [upload.array('image', 5), UserValidation.addPost, async (req, res) => {
     const user = await User.findOne({ username: req.params.username }).select('_id').lean();
+    
+    if (req.decoded.username !== req.params.username) {
+        return res.status(403).json({ success: false, message: 'Cannot create posts for other users'});
+    }
+
     if (!user) {
         return res.status(404).json({ success: false, message: 'no user found' });
     }
-    if (req.file) {
+
+    if (!_.isEmpty(req.files)) {
         try {
-            const post = await Post.create({ ...req.body, user: user._id, image: req.file.location });
+            const filesArr = req.files.map(file => file.location);
+            const post = await Post.create({ ...req.body, user: user._id, image: filesArr });
             return res.status(201).json({ success: true, post });
         } catch(err) {
             return res.status(400).json({err});
@@ -191,12 +222,28 @@ router.post('/:username/posts', [upload.single('image'), UserValidation.addPost,
 // @access   Private
 router.post ('/:username/favourite', [UserValidation.addPostToFavourites, async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate (req.decoded._id, { '$addToSet': { favourites: req.body.post } }, { 'new': true }).lean ();
+        const user = await User.findByIdAndUpdate (req.decoded._id, { '$addToSet': { favourites: req.body.post } }).lean ();
         if (!user) {
             return res.status (404).json ({ success: false, message: 'User not found' });
         }
 
         res.status (201).json ({ success: true });
+    } catch (err) {
+        return res.status (400).json ({ success: false, err });
+    }
+}]);
+
+// @route    POST users/:username/favourite
+// @desc     Add post to user's favourites
+// @access   Private
+router.post ('/:username/unfavourite', [UserValidation.removePostFromFavourites, async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate (req.decoded._id, { 'pull': { favourites: req.body.post } }).lean ();
+        if (!user) {
+            return res.status (404).json ({ success: false, message: 'User not found' });
+        }
+
+        res.status (200).json ({ success: true });
     } catch (err) {
         return res.status (400).json ({ success: false, err });
     }
