@@ -8,6 +8,7 @@ import { logout } from '../../actions/userActions';
 import NavMenu from './NavMenu';
 import NavSearch from './NavSearch';
 import { searchPosts } from '../../actions/post';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
     header: {
@@ -29,6 +30,9 @@ const useStyles = makeStyles(theme => ({
     placeholderHeader: {
         minHeight: '16vh',
         height: '16vh'
+    },
+    clear: {
+        cursor: 'pointer'
     }
 }));
 
@@ -69,21 +73,47 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                         <h3>Dream Home</h3>
                     </div>
                     <div />
-                    <NavSearch search={search} handleSearch={handleSearch} handleChange={handleSearchChange}
-                        clear={clearSearch}/>
+                    <NavSearch
+                        search={search}
+                        handleSearch={handleSearch}
+                        handleChange={handleSearchChange}
+                        clear={clearSearch}
+                    />
                     <div>
                         <h5>
-                            <Link to='/'>Home</Link>
+                            <Link to='/' style={{
+                                textDecoration: 'none'
+                            }}
+                            >
+                                <Button style={{
+                                    border: 'none',
+                                    padding: '0',
+                                    borderRadius: '7.5px'
+                                }}
+                                >
+                                    Home
+                                </Button>
+                            </Link>
                         </h5>
                     </div>
                     <div>
-                        <h5>Following</h5>
+                        <Button style={{
+                            border: 'none',
+                            padding: '0',
+                            borderRadius: '7.5px'
+                        }}
+                        >
+                            Following
+                        </Button>
                     </div>
                     <div />
-                    <NavMenu user={userStore.user} handleLogOutClicked={handleLogOutClicked}
-                        authenticated={userStore.authenticated}/>
+                    <NavMenu
+                        user={userStore.user}
+                        handleLogOutClicked={handleLogOutClicked}
+                        authenticated={userStore.authenticated}
+                    />
                 </div>
-                <div className={classes.headerBottomBorder}/>
+                <div className={classes.headerBottomBorder} />
             </div>
             <div className={classes.placeholderHeader}>placeholder</div>
         </div>
@@ -104,4 +134,10 @@ function mapDispatchToProps (dispatch) {
     );
 }
 
-export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(Navbar);
+export default compose(
+    withRouter,
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
+)(Navbar);

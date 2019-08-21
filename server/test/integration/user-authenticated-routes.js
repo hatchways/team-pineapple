@@ -1,4 +1,4 @@
-const { User, Follow } = require ('../../src/models');
+const { User, Follow, Board, Post } = require ('../../src/models');
 const { request, authentication_setup, addBoardandPost, addUser } = require ('../utils/common');
 
 const chai = require('chai');
@@ -17,6 +17,8 @@ describe('User Authenticated Routes', () => {
     after(async () => {
         User.collection.drop();
         Follow.collection.drop ();
+        Board.collection.drop ();
+        Post.collection.drop ();
     });
 
     describe('Update profile', () => {
@@ -56,12 +58,12 @@ describe('User Authenticated Routes', () => {
     });
 
     describe('Get user boards and posts', () => {
-        it('Should need return unauthorized', () => {
+        it ('Should need return authorized', () => {
             return request
                 .get('/users/test')
-                .expect(401)
+                .expect (200)
                 .then((res) => {
-                    expect(res.body.success).to.be.false;
+                    expect (res.body.success).to.be.true;
                 });
         });
 

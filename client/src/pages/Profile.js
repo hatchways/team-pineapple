@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import SnackBar from '../components/SnackBar/SnackBar';
 import Avatar from '@material-ui/core/Avatar';
 import { Card, Typography } from '@material-ui/core';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -14,16 +14,22 @@ import PostDialog from '../components/Dialog/PostDialog/PostDialog';
 import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
 import EditPicUserDialog from '../components/Dialog/EditPicUserDialog/EditPicUserDialog';
 import Button from '@material-ui/core/Button';
-import { getBoardsandPosts, followUser, unfollowUser, fetchProfileInfo } from '../actions/profileActions';
+import {
+    getBoardsandPosts,
+    followUser,
+    unfollowUser,
+    fetchProfileInfo
+} from '../actions/profileActions';
 import Posts from '../components/Posts/Posts';
 import _ from 'lodash';
 import './stylesheet/Profile.css';
+import Masonry from 'react-masonry-component';
 
 class Profile extends Component {
     state = {
         username: '',
         activePanel: 'board',
-        followedOrNot: false
+        SnackBar: !_.isEmpty(this.props.profileStore.error)
     };
 
     componentDidMount () {
@@ -32,12 +38,16 @@ class Profile extends Component {
         this.props.fetchProfileInfo(username);
     }
 
-    toggle = () => {
-        if (this.state.activePanel === 'board') {
-            this.setState({ activePanel: 'post' });
-        } else {
-            this.setState({ activePanel: 'board' });
-        }
+    togglePosts = () => {
+        this.setState({ activePanel: 'post' });
+    };
+
+    toggleBoards = () => {
+        this.setState({ activePanel: 'board' });
+    };
+
+    toggleFavorites = () => {
+        this.setState({ activePanel: 'favorite' });
     };
 
     onCreateBoardPress = () => {
@@ -78,39 +88,45 @@ class Profile extends Component {
     };
 
     checkFollowing = () => {
-        const { userStore: { user }, profileStore: { followers } } = this.props;
+        const {
+            userStore: { user },
+            profileStore: { profileInfo: { followers } }
+        } = this.props;
         const res = _.filter(followers, follower => follower._id === user._id);
         return _.isEmpty(res);
-    }
+    };
 
     renderFollowButton = () => {
         return this.checkFollowing() ? (
-            <button className='followButton' onClick={() => this.onFollowPress()}>
+            <Button className='followButton' color='primary' onClick={() => this.onFollowPress()}>
                 Follow!
-            </button>
+            </Button>
         ) : (
-            <button className='followButton' onClick={() => this.onUnfollowPress()}>
+            <Button className='followButton' color='primary' variant={'contained'} onClick={() => this.onUnfollowPress()}>
                 Stop Following!
-            </button>
+            </Button>
         );
     };
 
     renderBoards = () => {
-        return this.props.profileStore.profileInfo.boards.length === 0 ? (
+        const { boards } = this.props.profileStore.profileInfo;
+        return boards.length === 0 ? (
             <h2>There are no boards</h2>
         ) : (
-            this.props.profileStore.profileInfo.boards.map((board, i) => {
+            boards.map((board, i) => {
                 return (
                     <Card key={i} className='card'>
-                        <CardActionArea className='card'>
-                            <CardMedia className='cardImg' image={house} />
-                            <Typography variant='h6' className='cardHeader'>
-                                {board['title']}
-                            </Typography>
-                            <Typography variant='body1' className='cardHeader'>
-                                {board['posts'].length} posts
-                            </Typography>
-                        </CardActionArea>
+                        <Link to='/board/posts_in_board' className='boardLink'>
+                            <CardActionArea>
+                                <CardMedia className='cardImg' image={house} />
+                                <Typography variant='h6' className='cardHeader'>
+                                    {board['title']}
+                                </Typography>
+                                <Typography variant='body1' className='cardHeader'>
+                                    {board['posts'].length} posts
+                                </Typography>
+                            </CardActionArea>
+                        </Link>
                     </Card>
                 );
             })
@@ -118,12 +134,29 @@ class Profile extends Component {
     };
 
     renderPosts = () => {
-        return this.props.profileStore.profileInfo.posts.length === 0 ? (
-            <h2>There are no posts</h2>
-        ) : (
-            <Posts posts={this.props.profileStore.profileInfo.posts} />
-        );
+        const { posts } = this.props.profileStore.profileInfo;
+        return posts.length === 0 ? <h2>There are no posts</h2> : <Posts posts={posts} />;
     };
+
+    renderFavorites = () => {
+        const favoritePosts = [];
+        const favorites = favoritePosts.map(function (el) {
+            return (
+                <img className='favoritePost' src={el} key={el}></img>
+            );
+        });
+        return favoritePosts.length === 0 ? (
+            <h2>You have no favorite posts</h2>
+        ) : (
+            <Masonry
+                className='masonry'
+                elementType={'div'}
+                options={{ fitWidth: true, gutter: 15 }}
+            >
+                {favorites}
+            </Masonry>
+        );
+    }
 
     renderCreateButtons = () => {
         const {
@@ -141,16 +174,20 @@ class Profile extends Component {
             <>
                 <Button
                     color='primary'
-                    className='button'
                     onClick={() => this.onCreateBoardPress()}
+                    style={{
+                        margin: '10px'
+                    }}
                 >
                     Create Board
                 </Button>
                 <Button
                     color='primary'
-                    className='button'
                     variant={'contained'}
                     onClick={() => this.onCreatePostPress()}
+                    style={{
+                        margin: '10px'
+                    }}
                 >
                     Create Post
                 </Button>
@@ -158,50 +195,89 @@ class Profile extends Component {
         );
     };
 
+    renderSnackBarError = () => {
+        const { profileStore } = this.props;
+        if (!_.isEmpty(profileStore.error)) {
+            return (
+                <SnackBar
+                    message= { profileStore.error }
+                    variant='error'
+                    open={this.state.SnackBar}
+                    onClose = {() => this.setState({ SnackBar: false })}
+                />
+            );
+        }
+    };
+
     render () {
-        const { profileStore: { profileInfo, following = [], followers = [] } } = this.props;
-        if (_.isEmpty(this.props.profileStore)) {
-            return <CircularProgress className = 'spinner' />;
+        const {
+            profileStore: { profileInfo, loading }
+        } = this.props;
+        if (_.isUndefined(profileInfo) || loading) {
+            return <div><CircularProgress className='spinner' /></div>;
         }
         return (
             <div>
-                <Route path='/profile/:username/edit' component={EditPicUserDialog}/>
-                <Route path='/profile/:username/interest-quiz' component={InterestQuizDialog}/>
-                <Route path='/profile/:username/post/create' component={PostDialog}/>
-                <Route path='/profile/:username/board/create' component={BoardDialog}/>
+                <Route path='/profile/:username/edit' component={EditPicUserDialog} />
+                <Route path='/profile/:username/interest-quiz' component={InterestQuizDialog} />
+                <Route path='/profile/:username/post/create' component={PostDialog} />
+                <Route path='/profile/:username/board/create' component={BoardDialog} />
                 <div className='subHeader'>
                     <div className='nameContainer'>
-                        <Avatar className='subHeaderIcon' component={Link} src={profileInfo.profile}
-                            to={'/profile/' + profileInfo.username + '/edit'}/>
+                        <Avatar
+                            className='subHeaderIcon'
+                            component={Link}
+                            src={profileInfo.profile}
+                            to={'/profile/' + profileInfo.username + '/edit'}
+                        />
                         <div>
                             <h3 className='profileName'>{profileInfo.name}</h3>
                             <h5 className='profileFollowers'>
-                                {followers.length} Followers | {following.length} Following
+                                {profileInfo.followers.length} Followers |{' '}
+                                {profileInfo.following.length} Following
                             </h5>
                         </div>
                     </div>
                     <div />
                     <div>{this.renderCreateButtons()}</div>
-                    <div />
                 </div>
                 <div style={{ display: this.state.activePanel === 'board' ? 'grid' : 'none' }}>
                     <div className='tabSection'>
                         <div>
-                            <button className='activeTab' onClick={() => this.toggle()}>
+                            <Button
+                                color='primary'
+                                variant={'contained'}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
                                 Boards
-                            </button>
-                            <button className='tab' onClick={() => this.toggle()}>
+                            </Button>
+                            <Button
+                                color='primary'
+                                onClick={() => this.togglePosts()}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
                                 Posts
-                            </button>
+                            </Button>
+                            <Button
+                                color='primary'
+                                onClick={() => this.toggleFavorites()}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
+                                Favorites
+                            </Button>
                         </div>
                         <div />
                     </div>
                     <div className='activePanel'>
                         <div
                             className={
-                                profileInfo.boards.length === 0
-                                    ? 'gridContainer1'
-                                    : 'gridContainer'
+                                profileInfo.boards.length === 0 ? 'gridContainer1' : 'gridContainer'
                             }
                         >
                             {this.renderBoards()}
@@ -211,12 +287,33 @@ class Profile extends Component {
                 <div style={{ display: this.state.activePanel === 'post' ? 'grid' : 'none' }}>
                     <div className='tabSection'>
                         <div>
-                            <button className='tab' onClick={() => this.toggle()}>
+                            <Button
+                                color='primary'
+                                onClick={() => this.toggleBoards()}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
                                 Boards
-                            </button>
-                            <button className='activeTab' onClick={() => this.toggle()}>
-                                My Posts
-                            </button>
+                            </Button>
+                            <Button
+                                color='primary'
+                                variant={'contained'}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
+                                Posts
+                            </Button>
+                            <Button
+                                color='primary'
+                                onClick={() => this.toggleFavorites()}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
+                                Favorites
+                            </Button>
                         </div>
                         <div />
                     </div>
@@ -226,10 +323,52 @@ class Profile extends Component {
                                 profileInfo.posts.length === 0 ? 'postContainer1' : 'postContainer'
                             }
                         >
-                            {this.renderPosts()}
+                            <div style={{
+                                width: '90vw'
+                            }}>
+                                {this.renderPosts()}
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div style={{ display: this.state.activePanel === 'favorite' ? 'grid' : 'none' }}>
+                    <div className='tabSection'>
+                        <div>
+                            <Button
+                                color='primary'
+                                onClick={() => this.toggleBoards()}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
+                                Boards
+                            </Button>
+                            <Button
+                                color='primary'
+                                onClick={() => this.togglePosts()}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
+                                Posts
+                            </Button>
+                            <Button
+                                color='primary'
+                                variant={'contained'}
+                                style={{
+                                    margin: '10px'
+                                }}
+                            >
+                                Favorites
+                            </Button>
+                        </div>
+                        <div />
+                    </div>
+                    <div className='activePanel'>
+                        {this.renderFavorites()}
+                    </div>
+                </div>
+                {this.renderSnackBarError()}
             </div>
         );
     }
