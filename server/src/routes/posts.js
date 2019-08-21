@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { auth, pub } = require ('../middleware');
 const ObjectId = require ('mongoose').ObjectId;
-const { User, Post } = require('../models');
+const { User, Post, Board } = require('../models');
 const PostValidation = require ('./validate/post');
 
 const _ = require('lodash');
@@ -53,7 +53,14 @@ router.delete ('/:id', [PostValidation.delete, async (req, res) => {
             user: req.decoded._id
         }).lean ();
         if (!post) {
-            return res.status (404).json ({ success: false, message: 'no post found' });
+            return res.status(404).json({ success: false, message: 'Post not found' });
+        }
+
+        const board = await Board.updateMany({
+            posts: req.params.id
+        }, { 'pull': { posts: req.body.post } }).lean();
+        if (!board) {
+            return res.status(404).json({ success: false, message: 'Board not found' });
         }
 
         return res.status (204).json ({});

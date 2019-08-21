@@ -1,5 +1,5 @@
 const { User, Board, Post } = require ('../../src/models');
-const { request, authentication_setup, addBoardandPost } = require ('../utils/common');
+const { request, authentication_setup, addPostToBoard, getBoard } = require('../utils/common');
 
 const chai = require('chai');
 const expect = chai.expect;
@@ -7,10 +7,11 @@ const expect = chai.expect;
 describe('User Post Routes', () => {
     before(async() => {
         const { token, id } = await authentication_setup ();
-        const { post } = await addBoardandPost (id);
+        const { post, board } = await addPostToBoard(id);
         global.id = id;
         global.token = token;
         global.post = post;
+        global.board = board;
     });
 
     after(async () => {
@@ -120,11 +121,18 @@ describe('User Post Routes', () => {
                 });
         });
 
-        it ('Should return valid', () => {
-            return request
+        it('Should return valid', async () => {
+            let board = await getBoard(global['board']._id);
+            console.log(board);
+            expect(board.posts[0].toString()).to.be.equal(global['post']._id.toString());
+
+            await request
                 .delete (`/posts/${global['post']._id}`)
                 .set ({ 'access-token': global['token'] })
                 .expect (204);
+
+            board = await getBoard(global['board']._id);
+            expect(board.posts).does.not.contain(global['post']._id);
         });
     });
 
