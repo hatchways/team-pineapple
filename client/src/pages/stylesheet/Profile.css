@@ -97,7 +97,7 @@
 }
 
 .card {
-    height: 42vh;
+    height: 33vh;
     width: 26vw;
 }
 
@@ -135,4 +135,11 @@
 .boardLink {
     text-decoration: none;
     color: black;
+}
+
+.boardPreview {
+    display: grid;
+    justify-content: center;
+    height: 27vh;
+    overflow: hidden;
 }

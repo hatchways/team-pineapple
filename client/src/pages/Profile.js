@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import SnackBar from '../components/SnackBar/SnackBar';
 import Avatar from '@material-ui/core/Avatar';
 import { Card, Typography } from '@material-ui/core';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import house from '../assets/house.png';
 import { Route, Link, withRouter } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
@@ -25,6 +23,7 @@ import Posts from '../components/Posts/Posts';
 import _ from 'lodash';
 import './stylesheet/Profile.css';
 import Masonry from 'react-masonry-component';
+import BoardPreview from '../components/Posts/BoardPreview';
 
 class Profile extends Component {
     state = {
@@ -121,7 +120,7 @@ class Profile extends Component {
                     <Card key={i} className='card'>
                         <Link to='/board/posts_in_board' className='boardLink'>
                             <CardActionArea>
-                                <CardMedia className='cardImg' image={house} />
+                                <BoardPreview posts={this.props.boards} className='boardPreview'/>
                                 <Typography variant='h6' className='cardHeader'>
                                     {board['title']}
                                 </Typography>
@@ -389,7 +388,8 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
     userStore: state.UserStore,
-    profileStore: state.ProfileStore
+    profileStore: state.ProfileStore,
+    boards: state.PostStore.temporary
 });
 
 const mapDispatchToProps = dispatch => {
