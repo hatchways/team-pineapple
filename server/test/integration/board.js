@@ -22,13 +22,11 @@ describe ('User Board Routes', () => {
     describe ('Get Posts from Board', () => {
         it ('Should return valid', async () => {
             const { board } = await addPostToBoard (global['id']);
-            console.log (board);
             await request
                 .get (`/boards/${board._id}/posts`)
                 .set ({ 'access-token': global['token'] })
                 .expect (200)
                 .then ((res) => {
-                    console.log (res.body);
                     expect (res.body.success).to.be.true;
                     expect (res.body.posts[0].title).to.be.equal ('valid');
                 });
@@ -47,6 +45,35 @@ describe ('User Board Routes', () => {
         it ('Should return invalid', () => {
             return request
                 .get ('/boards/test/posts')
+                .set ({ 'access-token': global['token'] })
+                .expect (422)
+                .then ((res) => {
+                    expect (res.body.success).to.be.false;
+                });
+        });
+    });
+
+    describe ('Delete board', () => {
+        it ('Should return valid', async () => {
+            return request
+                .delete (`/boards/${global['board']._id}`)
+                .set ({ 'access-token': global['token'] })
+                .expect (204);
+        });
+
+        it ('Should return no board', () => {
+            return request
+                .delete (`/boards/${global['board']._id}`)
+                .set ({ 'access-token': global['token'] })
+                .expect (404)
+                .then ((res) => {
+                    expect (res.body.success).to.be.false;
+                });
+        });
+
+        it ('Should return invalid', () => {
+            return request
+                .delete ('/boards/test')
                 .set ({ 'access-token': global['token'] })
                 .expect (422)
                 .then ((res) => {
