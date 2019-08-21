@@ -8,6 +8,7 @@ describe('User Post Routes', () => {
     before(async() => {
         const { token, id } = await authentication_setup ();
         const { post } = await addBoardandPost (id);
+        global.id = id;
         global.token = token;
         global.post = post;
     });
@@ -95,6 +96,35 @@ describe('User Post Routes', () => {
                 .then ((res) => {
                     expect (res.body.success).to.be.true;
                 });
+        });
+    });
+
+    describe ('Delete Post', () => {
+        it ('Should need return not found', () => {
+            return request
+                .delete (`/posts/${id}`)
+                .set ({ 'access-token': global['token'] })
+                .expect (404)
+                .then ((res) => {
+                    expect (res.body.success).to.be.false;
+                });
+        });
+
+        it ('Should need return missing field', () => {
+            return request
+                .delete ('/posts/test')
+                .set ({ 'access-token': global['token'] })
+                .expect (422)
+                .then ((res) => {
+                    expect (res.body.success).to.be.false;
+                });
+        });
+
+        it ('Should return valid', () => {
+            return request
+                .delete (`/posts/${global['post']._id}`)
+                .set ({ 'access-token': global['token'] })
+                .expect (204);
         });
     });
 });
