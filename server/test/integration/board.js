@@ -23,18 +23,18 @@ describe ('User Board Routes', () => {
         it ('Should return valid', async () => {
             const { board } = await addPostToBoard (global['id']);
             await request
-                .get (`/boards/${board._id}/posts`)
+                .get(`/boards/${board._id}/posts`)
                 .set ({ 'access-token': global['token'] })
                 .expect (200)
                 .then ((res) => {
                     expect (res.body.success).to.be.true;
-                    expect (res.body.posts[0].title).to.be.equal ('valid');
+                    expect(res.body.board.posts[0].title).to.be.equal('valid');
                 });
         });
 
         it ('Should return no posts', () => {
             return request
-                .get (`/boards/${global['board']._id}/posts`)
+                .get(`/boards/${global['board']._id}/posts`)
                 .set ({ 'access-token': global['token'] })
                 .expect (404)
                 .then ((res) => {
@@ -44,7 +44,7 @@ describe ('User Board Routes', () => {
 
         it ('Should return invalid', () => {
             return request
-                .get ('/boards/test/posts')
+                .get(`/boards/test/posts`)
                 .set ({ 'access-token': global['token'] })
                 .expect (422)
                 .then ((res) => {

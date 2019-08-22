@@ -22,7 +22,7 @@ const FileUploader = ({ onUploadImages, files }) => {
                 // allowMultiple
                 // maxFiles={5}
                 acceptedFileTypes={['image/jpeg']}
-                labelIdle='Drag and drop or Click to upload. Use high-quality jpg files less than 32mb.'
+                labelIdle='</br><h1>Drag and drop or </br> click to upload</h1></br>'
                 maxFileSize='32MB'
                 onupdatefiles={fileItems => onUploadImages(fileItems)}
             />

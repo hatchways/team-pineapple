@@ -42,6 +42,13 @@ class QuizDialog extends React.Component {
         this.handleConfirm = this.handleConfirm.bind(this);
     }
 
+    componentDidMount () {
+        this.setState({
+            username: this.props.match.params.username,
+            selected: this.props.ProfileStore.profileInfo.interests
+        });
+    }
+
     handleChange (interest) {
         const selected = this.state.selected;
         const index = selected.indexOf(interest);
@@ -57,10 +64,11 @@ class QuizDialog extends React.Component {
     async handleConfirm () {
         const username = this.props.match.params.username;
         axios.put(`/users/${username}/interests`, {
-            interests: this.state.interests
+            interests: this.state.selected
         })
             .then(res => console.log(res))
             .catch(err => console.log(err));
+        this.props.history.push(`/profile/${this.state.username}`);
     }
 
     handleClose = () => {
@@ -87,7 +95,7 @@ class QuizDialog extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    userStore: state.UserStore
+    ProfileStore: state.ProfileStore
 });
 
 function mapDispatchToProps (dispatch) {
