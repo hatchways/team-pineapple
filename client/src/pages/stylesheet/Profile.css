@@ -139,7 +139,6 @@
 
 .boardPreview {
     display: grid;
-    justify-content: center;
-    height: 27vh;
+    height: 25vh;
     overflow: hidden;
 }

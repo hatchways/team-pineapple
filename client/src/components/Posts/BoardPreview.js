@@ -1,13 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Masonry from 'react-masonry-component';
+import placeholder from '../../assets/image_placeholder.png';
 
 const useStyles = makeStyles(theme => ({
     imageContainer: {
-        display: 'inline-block',
+        // display: 'inline-block',
         width: '33%'
     },
     image: {
+        display: 'block',
         width: '100%',
         height: 'auto',
         borderRadius: '1vw'
@@ -22,11 +24,16 @@ const useStyles = makeStyles(theme => ({
 
 const BoardPreview = ({ posts, className }) => {
     const classes = useStyles();
+    const len = posts.length;
+
+    for (let i = 0; i < 9 - len; i++) {
+        posts.push({ image: placeholder, _id: 'placeholder' });
+    }
 
     const images = posts.map((post, i) => {
         return (
             <div className={classes.imageContainer} key={i}>
-                <img src={post} alt={post} className={classes.image}/>
+                <img src={post.image} alt={post._id} className={classes.image}/>
             </div>
         );
     });

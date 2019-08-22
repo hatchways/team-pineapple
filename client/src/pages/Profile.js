@@ -5,7 +5,6 @@ import SnackBar from '../components/SnackBar/SnackBar';
 import Avatar from '@material-ui/core/Avatar';
 import { Card, Typography } from '@material-ui/core';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import house from '../assets/house.png';
 import { Route, Link, withRouter } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import InterestQuizDialog from '../components/Dialog/InterestQuizDialog/QuizDialog';
@@ -123,8 +122,7 @@ class Profile extends Component {
                     <Card key={i} className='card'>
                         <Link to='/board/posts_in_board' className='boardLink'>
                             <CardActionArea>
-                                <BoardPreview posts={this.props.boards} className='boardPreview'/>
-                                <CardMedia className='cardImg' image={house} />
+                                <BoardPreview posts={board.posts} className='boardPreview'/>
                             </CardActionArea>
                         </Link>
                         <div style={{
@@ -415,7 +413,6 @@ class Profile extends Component {
 const mapStateToProps = state => ({
     userStore: state.UserStore,
     profileStore: state.ProfileStore,
-    boards: state.PostStore.temporary
 });
 
 const mapDispatchToProps = dispatch => {
