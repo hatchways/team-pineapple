@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { auth, pub } = require ('../middleware');
-const ObjectId = require ('mongoose').ObjectId;
+const mongoose = require('mongoose');
 const { User, Post, Board } = require('../models');
+const { auth, pub } = require ('../middleware');
 const PostValidation = require ('./validate/post');
 
 const _ = require('lodash');
@@ -25,7 +25,7 @@ router.get ('/', [pub, async (req, res) => {
         // If logged in with empty search
         if (_.isEmpty(searchTags) && userId) {
             // Get user's interest and add interest into search tags
-            const user = await User.findById(ObjectId(userId));
+            const user = await User.findById(mongoose.Types.ObjectId(userId));
             searchTags = [...searchTags, ...user.interests];
             query = { tags: { $in: user.interests } };
         }
