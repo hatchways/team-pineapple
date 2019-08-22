@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Paper, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import SignUpForm from '../components/Dialog/SignUp/SignUpForm';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
-
+import './stylesheet/SignUp.css';
 const useStyles = makeStyles({
     container: {
         display: 'grid',
@@ -93,6 +99,7 @@ const useStyles = makeStyles({
 const SignUp = ({ history }) => {
     const style = useStyles();
     const [formData, setFormData] = useState({
+        name: '',
         username: '',
         email: '',
         password: '',
@@ -135,74 +142,33 @@ const SignUp = ({ history }) => {
     };
 
     return (
-        <div>
-            <div className={style.container}>
-                <div className={style.grid}>
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
-                    <Paper className={style.card} />
+        <Dialog open={true} aria-labelledby="form-dialog-title">
+            <DialogTitle style={{ textAlign: 'center' }}>Welecome!</DialogTitle>
+            <DialogContent>
+                <div className="Content">
+                    <SignUpForm
+                        onChangeText={onChangeText}
+                        username={username}
+                        email={email}
+                        // name={name}
+                        password={password}
+                        password2={password2}
+                    />
                 </div>
-            </div>
-            <div className={style.signin}>
-                <div className={style.modal}>
-                    <h1 className={style.welcome}>Welcome!</h1>
-                    <div className={style.inputContainer}>
-                        <TextField
-                            label='Username'
-                            name='username'
-                            className={style.input}
-                            value={username}
-                            onChange={e => onChangeText(e)}
-                        />
-                    </div>
-                    <div className={style.inputContainer}>
-                        <TextField
-                            label='E-mail'
-                            name='email'
-                            className={style.input}
-                            value={email}
-                            onChange={e => onChangeText(e)}
-                        />
-                    </div>
-                    <div className={style.inputContainer}>
-                        <TextField
-                            label='Password'
-                            name='password'
-                            type='password'
-                            className={style.input}
-                            value={password}
-                            onChange={e => onChangeText(e)}
-                            error={Boolean(passwordError)}
-                            helperText={passwordError}
-                        />
-                    </div>
-                    <div className={style.inputContainer}>
-                        <TextField
-                            label='Confirm Password'
-                            name='password2'
-                            type='password'
-                            className={style.input}
-                            value={password2}
-                            onChange={e => onChangeText(e)}
-                        />
-                    </div>
-                    <button className={style.signupbutton} onClick={postInfo}>
-                        Sign Up!
-                    </button>
-                    <p className={style.footer}>
-                        Already a Member?{' '}
-                        <Link to='/login' className={style.login}>
-                            Log In!
-                        </Link>
-                    </p>
-                </div>
-            </div>
-        </div>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={postInfo} color="primary" className="create">
+                    Sign Up!
+                </Button>
+            </DialogActions>
+
+            <p className={style.footer} style={{ textAlign: 'center' }}>
+                Already a Member?{' '}
+                <Link to="/login" className={style.login}>
+                    Log In!
+                </Link>
+            </p>
+        </Dialog>
     );
 };
 
