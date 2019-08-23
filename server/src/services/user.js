@@ -19,13 +19,13 @@ class UserClass {
         }, process.env.SECRET, { expiresIn: '24hr' });
     };
 
-    async follow () {
+    static async follow (id) {
         try {
             const count = await Follow.aggregate ([
                 {
                     $facet: {
                         'following': [
-                            { $match: { follower: this._id } },
+                            { $match: { follower: id } },
                             {
                                 $group: {
                                     _id: '$follower',
@@ -34,7 +34,7 @@ class UserClass {
                             }
                         ],
                         'followers': [
-                            { $match: { followee: this._id } },
+                            { $match: { followee: id } },
                             {
                                 $group: {
                                     _id: 'followee',

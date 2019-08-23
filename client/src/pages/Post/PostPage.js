@@ -52,16 +52,15 @@ class PostPage extends React.Component {
     render () {
         const {
             classes,
+            userStore: { authenticated },
             profileStore,
-            userStore: { user },
             post,
             morePosts,
-            match,
-            getBoardsandPosts
+            match
         } = this.props;
 
-        if (!profileStore.boards) {
-            getBoardsandPosts(user.username);
+        console.log(post(match.params.id));
+        if (!post(match.params.id)) {
             return (
                 <div>
                     <CircularProgress
@@ -94,7 +93,7 @@ class PostPage extends React.Component {
                         value={this.state.board}
                         post={post(match.params.id)}
                         boards={profileStore.boards}
-                        profileImage = {profileStore.profile}
+                        authenticated={authenticated}
                     />
                 </div>
                 <Divider component={'hr'} />
@@ -110,15 +109,8 @@ const mapStateToProps = state => ({
     userStore: state.UserStore,
     post: id => {
         return (
-            {
-                ...state.ProfileStore.posts.find(post => {
-                    return id === post._id;
-                }),
-                user: { ...state.UserStore.user }
-            } ||
-            state.ProfileStore.posts.find(post => {
-                return id === post._id;
-            })
+            state.posts.posts.find(post => id === post._id) ||
+            state.ProfileStore.profileInfo.posts.find(post => id === post._id)
         );
     },
     morePosts: state.PostStore.morePosts,

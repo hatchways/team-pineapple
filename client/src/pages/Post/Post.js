@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Post = ({ post, boards, handleSelectBoard, handleSave, value, profileImage }) => {
+const Post = ({ post, boards, handleSelectBoard, handleSave, value, profileImage, authenticated }) => {
     const classes = useStyles();
 
     return (
@@ -37,6 +37,7 @@ const Post = ({ post, boards, handleSelectBoard, handleSave, value, profileImage
                         value={value}
                         handleSelect={handleSelectBoard}
                         handleSave={handleSave}
+                        visible={authenticated}
                     />
                 </div>
             </Grid>

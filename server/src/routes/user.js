@@ -38,7 +38,7 @@ router.post('/login', [UserValidation.login, async (req, res) => {
         } else {
             res.status (200).json ({
                 success: true,
-                user: { ...user.toObject (), ...await user.follow () },
+                user: { ...user.toObject(), ...await User.follow(user._id) },
                 token: user.loginToken ()
             });
         }
@@ -58,7 +58,7 @@ router.get ('/:username', [pub, async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
-        return res.status(200).json({ success: true, user });
+        return res.status(200).json({ success: true, user: { ...user, ...await User.follow(user._id) } });
     } catch (err) {
         return res.status(400).json({ success: false, message: err });
     }
