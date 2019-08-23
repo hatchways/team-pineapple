@@ -143,7 +143,7 @@ describe('User Authenticated Routes', () => {
                     expect (res.body.success).to.be.true;
                 });
 
-            const temp = await User.follow(global.user._id);
+            const temp = await global.user.follow();
             expect (temp.following).to.be.equal (1);
         });
     });
@@ -198,7 +198,7 @@ describe('User Authenticated Routes', () => {
                     expect (res.body.success).to.be.true;
                 });
 
-            const temp = await User.follow(global.user._id);
+            const temp = await global.user.follow();
             expect (temp.following).to.be.equal (0);
         });
     });
