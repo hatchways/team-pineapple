@@ -12,7 +12,7 @@ import {
     FETCH_FOLLOWINGS_SUCCESS,
     FETCH_FOLLOWINGS_FAIL,
     FETCH_FOLLOWERS_SUCCESS,
-    FETCH_FOLLOWERS_FAIL, GET_USER_BOARDS_POSTS_SUCCESS, GET_USER_BOARDS_POSTS_ERROR
+    FETCH_FOLLOWERS_FAIL
 } from '../actions/types';
 import _ from 'lodash';
 
@@ -33,10 +33,6 @@ export default (state = initialState, action) => {
         return { ...state };
     case LOGOUT_SUCCESS:
         return { authenticated: false };
-    case GET_USER_BOARDS_POSTS_SUCCESS:
-        return { ...state, user: response.user };
-    case GET_USER_BOARDS_POSTS_ERROR:
-        return { ...state, error: action.err };
     case GET_TOKEN_SUCCESS:
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case EDIT_PROFILE_SUCCESS:

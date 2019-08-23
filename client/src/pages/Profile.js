@@ -47,14 +47,6 @@ class Profile extends Component {
         this.props.history.push(`/profile/${this.state.username}/${item}/create`);
     };
 
-    onCreateBoardPress = () => {
-        this.props.history.push(`/profile/${this.state.username}/board/create`);
-    };
-
-    onCreatePostPress = () => {
-        this.props.history.push(`/profile/${this.state.username}/post/create`);
-    };
-
     onFollowPress = () => {
         const {
             userStore: { authenticated, user },
@@ -96,6 +88,10 @@ class Profile extends Component {
     };
 
     renderFollowButton = () => {
+        if (!this.props.userStore.authenticated) {
+            return null;
+        }
+
         return this.checkFollowing() ? (
             <Button className="followButton" color="primary" onClick={() => this.onFollowPress()}>
                 Follow!
@@ -398,7 +394,6 @@ class Profile extends Component {
                     <div className="activePanel">{this.renderFavorites()}</div>
                 </div>
                 {this.renderSnackBarError()}
-                {/* <SnackBar variant = 'success' message = 'hello' open ={this.state.SnackBar}/> */}
             </div>
         );
     }

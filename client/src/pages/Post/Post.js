@@ -31,7 +31,7 @@ const Post = ({ post, boards, handleSelectBoard, handleSave, value, profileImage
             </Grid>
             <Grid item xs={6}>
                 <div className={classes.info}>
-                    <PostDetails post={post} profileImage={profileImage}/>
+                    <PostDetails post={post} profileImage={profileImage} authenticated={authenticated}/>
                     <BoardList
                         boards={boards}
                         value={value}
