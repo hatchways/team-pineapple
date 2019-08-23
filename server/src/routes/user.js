@@ -53,6 +53,7 @@ router.get ('/:username', [pub, async (req, res) => {
         const user = await User.findOne({ username: req.params.username })
             .select('-password')
             .populate('posts')
+            .populate('favourites')
             .populate({ path: 'boards', populate: { path: 'posts', select: '_id image', options: { limit: 9 } } })
             .lean();
         if (!user) {
