@@ -12,8 +12,7 @@ import PostDialog from '../components/Dialog/PostDialog/PostDialog';
 import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
 import EditPicUserDialog from '../components/Dialog/EditPicUserDialog/EditPicUserDialog';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteButton from '../components/Buttons/DeleteButton';
 import {
     getBoardsandPosts,
     followUser,
@@ -41,16 +40,12 @@ class Profile extends Component {
         this.props.fetchProfileInfo(username);
     }
 
-    togglePosts = () => {
-        this.setState({ activePanel: 'post' });
+    toggleTabs = item => {
+        this.setState({ activePanel: `${item}` });
     };
 
-    toggleBoards = () => {
-        this.setState({ activePanel: 'board' });
-    };
-
-    toggleFavorites = () => {
-        this.setState({ activePanel: 'favorite' });
+    onCreatePress = item => {
+        this.props.history.push(`/profile/${this.state.username}/${item}/create`);
     };
 
     onCreateBoardPress = () => {
@@ -134,32 +129,28 @@ class Profile extends Component {
                                 <BoardPreview posts={board.posts} className='boardPreview'/>
                             </CardActionArea>
                         </Link>
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1fr'
-                        }}
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: '1fr 1fr'
+                            }}
                         >
                             <div>
-                                <Typography variant='h6' className='cardHeader'>
+                                <Typography variant="h6" className="cardHeader">
                                     {board['title']}
                                 </Typography>
                                 <Typography variant="body1" className="cardHeader">
                                     {board['posts'].length} posts
                                 </Typography>
                             </div>
-                            <div style={{
-                                display: 'grid',
-                                alignContent: 'center',
-                                justifyContent: 'end'
-                            }}>
-                                <IconButton
-                                    size='medium'
-                                    style={{
-                                        marginRight: '10px'
-                                    }}
-                                >
-                                    <DeleteIcon/>
-                                </IconButton>
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    alignContent: 'center',
+                                    justifyContent: 'end'
+                                }}
+                            >
+                                <DeleteButton item="boards" id={board._id} title={board.title} />
                             </div>
                         </div>
                     </Card>
@@ -170,7 +161,13 @@ class Profile extends Component {
 
     renderPosts = () => {
         const { posts } = this.props.profileStore.profileInfo;
-        return posts.length === 0 ? <h2>There are no posts</h2> : <div style={{ width: '100vw' }}><Posts posts={posts} /></div>;
+        return posts.length === 0 ? (
+            <h2>There are no posts</h2>
+        ) : (
+            <div style={{ width: '100vw' }}>
+                <Posts posts={posts} />
+            </div>
+        );
     };
 
     renderFavorites = () => {
@@ -207,7 +204,7 @@ class Profile extends Component {
             <>
                 <Button
                     color="primary"
-                    onClick={() => this.onCreateBoardPress()}
+                    onClick={() => this.onCreatePress('board')}
                     style={{
                         margin: '10px'
                     }}
@@ -217,7 +214,7 @@ class Profile extends Component {
                 <Button
                     color="primary"
                     variant={'contained'}
-                    onClick={() => this.onCreatePostPress()}
+                    onClick={() => this.onCreatePress('post')}
                     style={{
                         margin: '10px'
                     }}
@@ -238,7 +235,7 @@ class Profile extends Component {
                 <SnackBar
                     message={error.message}
                     variant={error.status}
-                    open={this.state.SnackBar}
+                    open={!_.isEmpty(error)}
                     onClose={() => {
                         this.setState({ SnackBar: false });
                         clearError();
@@ -299,7 +296,7 @@ class Profile extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                onClick={() => this.togglePosts()}
+                                onClick={() => this.toggleTabs('post')}
                                 style={{
                                     margin: '10px'
                                 }}
@@ -308,7 +305,7 @@ class Profile extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleFavorites()}
+                                onClick={() => this.toggleTabs('favorite')}
                                 style={{
                                     margin: '10px'
                                 }}
@@ -333,7 +330,7 @@ class Profile extends Component {
                         <div>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleBoards()}
+                                onClick={() => this.toggleTabs('board')}
                                 style={{
                                     margin: '10px'
                                 }}
@@ -351,7 +348,7 @@ class Profile extends Component {
                             </Button>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleFavorites()}
+                                onClick={() => this.toggleTabs('favorite')}
                                 style={{
                                     margin: '10px'
                                 }}
@@ -382,7 +379,7 @@ class Profile extends Component {
                         <div>
                             <Button
                                 color="primary"
-                                onClick={() => this.toggleBoards()}
+                                onClick={() => this.toggleTabs('board')}
                                 style={{
                                     margin: '10px'
                                 }}
@@ -390,8 +387,9 @@ class Profile extends Component {
                                 Boards
                             </Button>
                             <Button
+                                id="post"
                                 color="primary"
-                                onClick={() => this.togglePosts()}
+                                onClick={() => this.toggleTabs('post')}
                                 style={{
                                     margin: '10px'
                                 }}
