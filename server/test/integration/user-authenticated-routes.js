@@ -76,6 +76,7 @@ describe('User Authenticated Routes', () => {
                 .then((res) => {
                     expect(res.body.user.boards[0].title).to.be.equal('test board');
                     expect(res.body.user.posts[0].title).to.be.equal('test');
+                    expect (res.body.user.favourites[0].title).to.be.equal ('test');
                     expect(res.body.success).to.be.true;
                 });
         });
@@ -142,7 +143,7 @@ describe('User Authenticated Routes', () => {
                     expect (res.body.success).to.be.true;
                 });
 
-            const temp = await global.user.follow ();
+            const temp = await global.user.follow();
             expect (temp.following).to.be.equal (1);
         });
     });
@@ -197,7 +198,7 @@ describe('User Authenticated Routes', () => {
                     expect (res.body.success).to.be.true;
                 });
 
-            const temp = await global.user.follow ();
+            const temp = await global.user.follow();
             expect (temp.following).to.be.equal (0);
         });
     });

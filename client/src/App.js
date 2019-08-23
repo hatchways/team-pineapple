@@ -19,6 +19,8 @@ import PostInBoards from './pages/PostsInBoards';
 
 import NavBar from './components/Navbar/Navbar';
 
+import FollowersPage from './pages/FollowersPage';
+
 class App extends Component {
     constructor (props) {
         super(props);
@@ -43,6 +45,7 @@ class App extends Component {
                             />
                             <Route exact path='/signup' component={SignUp} />
                             <Route path='/board/:id' component={PostInBoards}/>
+                            <Route path='/profile/:username/following' component={FollowersPage}/>
                         </Switch>
                     </div>
                 </BrowserRouter>

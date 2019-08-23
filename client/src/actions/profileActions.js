@@ -18,7 +18,9 @@ import {
     ADD_POST_SUCCESS,
     EDIT_PROFILE_SUCCESS,
     EDIT_PROFILE_FAIL,
-    CLEAR_ERROR
+    CLEAR_ERROR,
+    DELETE_FAIL,
+    DELETE_SUCCESS
 } from '../actions/types';
 import axios from 'axios';
 import _ from 'lodash';
@@ -46,16 +48,7 @@ export const fetchProfileInfo = username => async dispatch => {
             type: FETCHING_PROFILE
         });
         const res = await axios.get(`/users/${username}`);
-        const promises = [
-            axios.get(`/users/${res.data.user._id}/following`),
-            axios.get(`/users/${res.data.user._id}/followers`)
-        ];
-        const results = await Promise.all(promises);
-        const following = results[0].data.following;
-        const followers = results[1].data.followers;
         const profileInfo = res.data.user;
-        profileInfo['following'] = following;
-        profileInfo['followers'] = followers;
         dispatch({
             type: FETCH_PROFILE_SUCCESS,
             payload: profileInfo
@@ -145,11 +138,14 @@ export const createPost = (formData, username, board) => async dispatch => {
             headers: { 'Content-Type': 'multipart/form-data' }
         });
         if (!_.isEmpty(board)) {
-            await axios.put(`/users/board/${board}`, { _id: res.data.post._id });
+            await axios.put(`/boards/${board}/post`, { _id: res.data.post._id });
         }
         dispatch({
             type: ADD_POST_SUCCESS,
-            response: { post: res.data, error: { message: 'Succesfully created a post', status: 'success' } }
+            response: {
+                post: res.data,
+                error: { message: 'Succesfully created a post', status: 'success' }
+            }
         });
     } catch (err) {
         dispatch({
@@ -183,5 +179,32 @@ export const favouritePost = (username, post) => async dispatch => {
         await axios.post(`/users/${username}/favourite`, { post });
     } catch (err) {
         console.log('Something went wrong with favouriting this post');
+    }
+};
+
+export const deleteItem = (item, id) => async dispatch => {
+    try {
+        dispatch({
+            type: CLEAR_ERROR
+        });
+        await axios.delete(`/${item}/${id}`);
+        dispatch({
+            type: DELETE_SUCCESS,
+            payload: {
+                item,
+                id,
+                error: { message: `Successfully deleted the ${item.slice(0, -1)}`, status: 'success' }
+            }
+        });
+    } catch (err) {
+        dispatch({
+            type: DELETE_FAIL,
+            payload: {
+                error: {
+                    message: `Something went wrong with deleting the ${item.slice(0, -1)}`,
+                    status: 'error'
+                }
+            }
+        });
     }
 };

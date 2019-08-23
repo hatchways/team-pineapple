@@ -10,9 +10,9 @@ const { auth } = require ('../middleware');
 // @access   Private
 router.get ('/:id/posts', [BoardValidation.getPosts, async (req, res) => {
     try {
-        const board = await Board.findOne ({
-            _id: req.params.id
-        }).populate ('posts', 'title image description tags').lean ();
+        const board = await Board.findOne({ _id: req.params.id })
+            .populate({ path: 'posts', select: 'title image description tags' })
+            .lean();
         if (!board) {
             return res.status (404).json ({ success: false, message: 'no board found' });
         } else if (!board.posts.length) {
@@ -59,9 +59,9 @@ router.put('/:id/post', async (req, res) => {
 });
 
 // @route    PUT boards/:id/remove
-// @desc     Add post to a board
+// @desc     Remove post from a board
 // @access   Private
-router.put('/:id/remove', [BoardValidation.getPosts, async (req, res) => {
+router.put('/:id/remove', [BoardValidation.removePost, async (req, res) => {
     try {
         const board = await Board.findOneAndUpdate({
             _id: req.params.id,
@@ -74,6 +74,22 @@ router.put('/:id/remove', [BoardValidation.getPosts, async (req, res) => {
         res.status(200).json({ success: true });
     } catch (err) {
         return res.status(400).json({ success: false, err });
+    }
+}]);
+
+router.delete ('/:id', [BoardValidation.delete, async (req, res) => {
+    try {
+        const board = await Board.findOneAndDelete ({
+            _id: req.params.id,
+            user: req.decoded._id
+        }).lean ();
+        if (!board) {
+            return res.status (404).json ({ success: false, message: 'no board found' });
+        }
+
+        return res.status (204).json ({});
+    } catch (err) {
+        return res.status (400).json ({ success: false, err });
     }
 }]);
 

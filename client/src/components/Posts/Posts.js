@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Link } from 'react-router-dom';
 import Masonry from 'react-masonry-component';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteButton from '../Buttons/DeleteButton';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,7 +28,7 @@ const useStyles = makeStyles(theme => ({
         display: 'none',
         float: 'right',
         position: 'absolute',
-        right: 10,
+        right: 0,
         top: 10,
         backgroundColor: 'rgba(0,0,0,0.6)'
     },
@@ -39,6 +38,9 @@ const useStyles = makeStyles(theme => ({
     imageContainer: {
         marginBottom: '7.5px',
         marginTop: '7.5px',
+        '&:hover': {
+            opacity: '0.9'
+        },
         '&:hover $title': {
             display: 'block'
         },
@@ -49,7 +51,8 @@ const useStyles = makeStyles(theme => ({
     image: {
         width: '20vw',
         height: 'auto',
-        borderRadius: '1vw'
+        borderRadius: '1vw',
+        boxShadow: '0px 1px 3px grey'
     },
     masonry: {
         margin: '0 auto',
@@ -66,12 +69,15 @@ const Posts = ({ posts }) => {
         return (
             <div className={classes.imageContainer} key={i}>
                 <Link to={'/posts/' + post._id}>
-                    <img src={post.image} alt={post.title} className={classes.image}/>
+                    <img src={post.image} alt={post.title} className={classes.image} />
                     <p className={classes.title}>{post.title}</p>
                 </Link>
-                <IconButton className={classes.deleteIconContainer} size="small">
-                    <DeleteIcon className={classes.deleteIcon}/>
-                </IconButton>
+                <DeleteButton
+                    item="posts"
+                    id={post._id}
+                    title={post.title}
+                    className={classes.deleteIconContainer}
+                />
             </div>
         );
     });
