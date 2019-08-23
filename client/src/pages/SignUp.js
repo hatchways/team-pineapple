@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { TextField } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { signUp, login } from '../actions/userActions';
 import SignUpForm from '../components/Dialog/SignUp/SignUpForm';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import axios from 'axios';
 import './stylesheet/SignUp.css';
+import CloseIcon from '@material-ui/icons/Close';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 const useStyles = makeStyles({
     container: {
         display: 'grid',
@@ -68,13 +70,11 @@ const useStyles = makeStyles({
         backgroundColor: 'white',
         padding: '10px 50px 10px 50px',
         margin: '0 auto',
-        marginTop: '20px',
+        marginTop: '5px',
         borderRadius: '50px',
         fontWeight: 'bold',
         display: 'block',
         '&:hover': {
-            backgroundColor: 'lightblue',
-            color: 'white',
             cursor: 'pointer'
         }
     },
@@ -92,11 +92,21 @@ const useStyles = makeStyles({
             color: 'blue',
             cursor: 'pointer'
         }
+    },
+    closeButton: {
+        color: 'gray',
+        marginTop: '10px',
+        marginRight: '10px',
+        float: 'right',
+        '&:hover': {
+            cursor: 'pointer',
+            color: 'black'
+        }
     }
 });
 
 // eslint-disable-next-line react/prop-types
-const SignUp = ({ history }) => {
+const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
     const style = useStyles();
     const [formData, setFormData] = useState({
         name: '',
@@ -104,72 +114,116 @@ const SignUp = ({ history }) => {
         email: '',
         password: '',
         password2: '',
-        passwordError: ''
+        passwordError: '',
+        usernameError: ''
     });
-    const { email, username, password, password2, passwordError } = formData;
+    const { email, username, password, password2, passwordError, usernameError } = formData;
 
-    const onChangeText = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChangeText = e =>
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+            [`${e.target.name}Error`]: ''
+        });
 
-    const postInfo = async () => {
+    const postInfo = () => {
         if (password !== password2) {
             setFormData({ ...formData, passwordError: 'Passwords do not match' });
         }
-
-        // TODO: Fix Signup (fix password validation as well)
-        if (!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-zd$@!%*?&].{8,}/)) {
+        if (password.length < 8) {
             setFormData({
                 ...formData,
-                passwordError:
-                    'Password must contain at least 8 characters and one Lower Case and one Upper Case and 3 Numbers'
+                passwordError: 'Password must contain at least 8 characters'
             });
-        } else {
-            try {
-                const body = {
-                    username,
-                    name: username,
-                    email,
-                    password
-                };
-                const config = {
-                    'Content-Type': 'application/json'
-                };
-                await axios.post('/users/register', body, config);
-                history.push(`/profile/${username}`);
-            } catch (err) {
-                console.log('Something went wrong with the registration');
-            }
+        }
+
+        // TODO: Fix Signup (fix password validation as well)
+        // if (!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-zd$@!%*?&].{8,}/)) {
+
+        if (username.length < 6 || username.length > 20) {
+            setFormData({
+                ...formData,
+                usernameError: 'Username must be atleast 6 to 20 characters'
+            });
+        } else if (
+            password === password2 &&
+            password.length > 8 &&
+            username.length > 6 &&
+            username.length < 20
+        ) {
+            const body = {
+                username,
+                name: username,
+                email,
+                password
+            };
+            signUp(body);
         }
     };
 
-    return (
-        <Dialog open={true} aria-labelledby="form-dialog-title">
-            <DialogTitle style={{ textAlign: 'center' }}>Welecome!</DialogTitle>
-            <DialogContent>
-                <div className="Content">
-                    <SignUpForm
-                        onChangeText={onChangeText}
-                        username={username}
-                        email={email}
-                        // name={name}
-                        password={password}
-                        password2={password2}
-                    />
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={postInfo} color="primary" className="create">
-                    Sign Up!
-                </Button>
-            </DialogActions>
+    const onCloseClick = () => {
+        history.push('/');
+    };
 
-            <p className={style.footer} style={{ textAlign: 'center' }}>
-                Already a Member?{' '}
-                <Link to="/login" className={style.login}>
-                    Log In!
-                </Link>
-            </p>
+    const renderLoading = () => {
+        if (loading) {
+            return <LinearProgress />;
+        }
+    };
+    if (error.status === 'success') {
+        login({ email, password });
+        history.push('/');
+    }
+
+    return (
+        <Dialog open={true} aria-labelledby="form-dialog-title" onClick={() => onCloseClick()}>
+            {renderLoading()}
+            <div onClick={e => e.stopPropagation()}>
+                <CloseIcon
+                    className={style.closeButton}
+                    fontSize="small"
+                    onClick={() => onCloseClick()}
+                />
+
+                <DialogTitle style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                    Create an account!
+                </DialogTitle>
+                <SignUpForm
+                    onChangeText={onChangeText}
+                    username={username}
+                    email={email}
+                    password={password}
+                    password2={password2}
+                    passwordError={passwordError}
+                    usernameError={usernameError}
+                />
+                <DialogActions>
+                    <Button
+                        onClick={postInfo}
+                        color="primary"
+                        className={style.signupbutton}
+                        disabled={loading}
+                    >
+                        Sign Up!
+                    </Button>
+                </DialogActions>
+
+                <p className={style.footer} style={{ textAlign: 'center' }}>
+                    Already a Member?{' '}
+                    <Link to="/login" className={style.login}>
+                        Log In!
+                    </Link>
+                </p>
+            </div>
         </Dialog>
     );
 };
 
-export default SignUp;
+const mapStateToProps = state => ({
+    userStore: state.UserStore
+});
+
+export default connect(
+    mapStateToProps,
+    { signUp, login }
+)(SignUp);
