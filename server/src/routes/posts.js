@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { pub } = require ('../middleware');
 const mongoose = require('mongoose');
-const { User, Post } = require('../models');
+const { User, Post, Board } = require('../models');
+const { auth, pub } = require ('../middleware');
+const PostValidation = require ('./validate/post');
 
 const _ = require('lodash');
 
@@ -35,10 +36,36 @@ router.get ('/', [pub, async (req, res) => {
         } else {
             query = {};
         }
-        const posts = await Post.find(query);
+        const posts = await Post.find(query).populate({ path: 'user', select: 'username name profile' }).lean();
         res.send(posts);
     } catch (err) {
         res.status(500).send('Something went wrong with the server');
+    }
+}]);
+
+//authenticated routes below this middleware
+router.use (auth);
+
+router.delete ('/:id', [PostValidation.delete, async (req, res) => {
+    try {
+        const post = await Post.findOneAndDelete ({
+            _id: req.params.id,
+            user: req.decoded._id
+        }).lean ();
+        if (!post) {
+            return res.status(404).json({ success: false, message: 'Post not found' });
+        }
+
+        const board = await Board.updateMany({
+            posts: req.params.id
+        }, { 'pull': { posts: req.body.post } }).lean();
+        if (!board) {
+            return res.status(404).json({ success: false, message: 'Board not found' });
+        }
+
+        return res.status (204).json ({});
+    } catch (err) {
+        return res.status (400).json ({ success: false, err });
     }
 }]);
 

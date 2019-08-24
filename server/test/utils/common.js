@@ -33,6 +33,8 @@ module.exports = {
             image: 'test image'
         });
 
+        await User.findByIdAndUpdate(id, { '$addToSet': { favourites: post._id } }).lean();
+
         return { board, post };
     },
     addPostToBoard: async (id) => {
@@ -62,6 +64,9 @@ module.exports = {
         });
 
         return user._id;
+    },
+    getBoard: async (id) => {
+        return await Board.findById(id).lean();
     },
     request
 };

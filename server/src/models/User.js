@@ -36,10 +36,10 @@ const user = new mongoose.Schema({
     interests: {
         type: [String]
     },
-    favourites: {
-        type: [mongoose.Schema.Types.ObjectId],
+    favourites: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'posts'
-    }
+    }]
 });
 
 user.virtual('boards', {
@@ -67,6 +67,7 @@ user.pre('save', function (next) {
     });
 });
 
+user.set('toObject', { virtuals: true });
 user.plugin(uniqueValidator, { type: 'mongoose-unique-validator' });
 user.loadClass(UserClass);
 module.exports = mongoose.model('users', user, 'users');

@@ -13,4 +13,10 @@ module.exports = {
 
         validationHandler (req, res, next);
     },
+
+    delete: (req, res, next) => {
+        req.checkParams ('id', 'No id provided').exists ().isMongoId ();
+
+        validationHandler (req, res, next);
+    }
 };
