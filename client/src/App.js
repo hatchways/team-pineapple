@@ -16,10 +16,8 @@ import PostPage from './pages/Post/PostPage';
 import { getToken } from './actions/userActions';
 
 import PostInBoards from './pages/Profile/PostsInBoards';
-
 import NavBar from './components/Navbar/Navbar';
-
-import FollowersPage from './pages/Followers/FollowersPage';
+import FollowingPage from './pages/Following/FollowingPage';
 
 class App extends Component {
     constructor (props) {
@@ -37,6 +35,7 @@ class App extends Component {
                             <Route exact path='/' component={withRouter(Main)} />
                             <Route exact path='/login' component={Login} />
                             <Route path='/posts/:id' component={PostPage} />
+                            <Route path='/profile/:username/following' component={FollowingPage}/>
                             <Route
                                 path='/profile/:username'
                                 render={props => (
@@ -45,7 +44,6 @@ class App extends Component {
                             />
                             <Route exact path='/signup' component={SignUp} />
                             <Route path='/board/:id' component={PostInBoards}/>
-                            <Route path='/profile/:username/following' component={FollowersPage}/>
                         </Switch>
                     </div>
                 </BrowserRouter>

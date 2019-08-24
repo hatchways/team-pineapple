@@ -4,7 +4,7 @@ import {
     LOGIN_RESPONSE,
     LOGOUT,
     FOLLOW,
-    UNFOLLOW
+    UNFOLLOW, FETCH_FOLLOWING, FETCH_FOLLOWERS
 } from '../actions/types';
 
 export const login = user => ({
@@ -22,6 +22,16 @@ export const logout = () => ({
 
 export const getToken = () => ({
     type: GET_TOKEN
+});
+
+export const getFollowing = user => ({
+    type: FETCH_FOLLOWING,
+    user
+});
+
+export const getFollowers = user => ({
+    type: FETCH_FOLLOWERS,
+    user
 });
 
 export const follow = followee => ({

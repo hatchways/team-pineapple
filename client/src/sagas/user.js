@@ -1,10 +1,22 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
 import {
-    LOGIN, LOGIN_SUCCESS, LOGIN_ERROR,
-    GET_TOKEN, GET_TOKEN_SUCCESS,
-    LOGOUT, LOGOUT_SUCCESS,
-    FOLLOW, FOLLOW_ERROR, FOLLOW_SUCCESS,
-    UNFOLLOW, UNFOLLOW_ERROR, UNFOLLOW_SUCCESS
+    LOGIN,
+    LOGIN_SUCCESS,
+    LOGIN_ERROR,
+    GET_TOKEN,
+    GET_TOKEN_SUCCESS,
+    LOGOUT,
+    LOGOUT_SUCCESS,
+    FOLLOW,
+    FOLLOW_ERROR,
+    FOLLOW_SUCCESS,
+    UNFOLLOW,
+    UNFOLLOW_ERROR,
+    UNFOLLOW_SUCCESS,
+    FETCH_FOLLOWERS,
+    FETCH_FOLLOWING,
+    FETCH_FOLLOWING_SUCCESS,
+    FETCH_FOLLOWING_ERROR, FETCH_FOLLOWERS_SUCCESS, FETCH_FOLLOWERS_ERROR
 } from '../actions/types';
 import { userService } from '../services/user';
 
@@ -50,12 +62,37 @@ export function * getTokenSaga () {
     yield takeLatest(GET_TOKEN, getToken);
 }
 
+function * getFollowing (request) {
+    try {
+        const response = yield call(userService.getFollowing, request);
+        yield put({ type: FETCH_FOLLOWING_SUCCESS, following: response.following });
+    } catch (err) {
+        yield put({ type: FETCH_FOLLOWING_ERROR, err });
+    }
+}
+
+export function * getFollowingSaga () {
+    yield takeLatest(FETCH_FOLLOWING, getFollowing);
+}
+
+function * getFollowers (request) {
+    try {
+        const response = yield call(userService.getFollowers, request);
+        yield put({ type: FETCH_FOLLOWERS_SUCCESS, followers: response.followers });
+    } catch (err) {
+        yield put({ type: FETCH_FOLLOWERS_ERROR, err });
+    }
+}
+
+export function * getFollowersSaga () {
+    yield takeLatest(FETCH_FOLLOWERS, getFollowers);
+}
+
 function * follow (request) {
     try {
         yield call(userService.follow, request);
         yield put({ type: FOLLOW_SUCCESS, payload: request.followee });
     } catch (err) {
-        console.log(err);
         yield put({ type: FOLLOW_ERROR, payload: 'could not follow user' });
     }
 }
@@ -69,7 +106,6 @@ function * unFollow (request) {
         yield call(userService.unfollow, request);
         yield put({ type: UNFOLLOW_SUCCESS, payload: request.followee });
     } catch (err) {
-        console.log(err);
         yield put({ type: UNFOLLOW_ERROR, payload: 'could not unfollow user' });
     }
 }

@@ -7,10 +7,10 @@ import {
     EDIT_PROFILE_SUCCESS,
     FOLLOW_SUCCESS,
     UNFOLLOW_SUCCESS,
-    FETCH_FOLLOWINGS_SUCCESS,
-    FETCH_FOLLOWINGS_FAIL,
+    FETCH_FOLLOWING_SUCCESS,
+    FETCH_FOLLOWING_ERROR,
     FETCH_FOLLOWERS_SUCCESS,
-    FETCH_FOLLOWERS_FAIL,
+    FETCH_FOLLOWERS_ERROR,
     DELETE_SUCCESS,
     DELETE_FAIL,
     ADD_BOARD_SUCCESS,
@@ -64,14 +64,14 @@ export default (state = initialState, action) => {
         };
     case FOLLOW_ERROR:
     case UNFOLLOW_ERROR:
-        return { ...state, error: action.payload.error };
-    case FETCH_FOLLOWINGS_SUCCESS:
-        return { ...state, following: action.payload };
-    case FETCH_FOLLOWINGS_FAIL:
-    case FETCH_FOLLOWERS_FAIL:
-        return { ...state, error: action.payload.error };
+        return { ...state, error: action.error };
+    case FETCH_FOLLOWING_SUCCESS:
+        return { ...state, following: action.following };
+    case FETCH_FOLLOWING_ERROR:
+    case FETCH_FOLLOWERS_ERROR:
+        return { ...state, error: action.error };
     case FETCH_FOLLOWERS_SUCCESS:
-        return { ...state, followers: action.payload };
+        return { ...state, followers: action.followers };
     case ADD_BOARD_SUCCESS:
         state.user.boards.push(response.board);
         localStorage.setItem('user', JSON.stringify(state.user));

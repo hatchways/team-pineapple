@@ -16,10 +16,10 @@ import DeleteButton from '../../components/Buttons/DeleteButton';
 import Posts from '../../components/Posts/Posts';
 import _ from 'lodash';
 import '../stylesheet/Profile.css';
-import BoardPreview from '../components/Posts/BoardPreview';
+import BoardPreview from '../../components/Posts/BoardPreview';
 import Tooltip from '@material-ui/core/Tooltip';
-import { getBoardsandPosts, clearError } from '../actions/profileActions';
-import { follow, unfollow } from '../actions/userActions';
+import { getBoardsandPosts, clearError } from '../../actions/profileActions';
+import { follow, unfollow } from '../../actions/userActions';
 
 class Profile extends Component {
     state = {

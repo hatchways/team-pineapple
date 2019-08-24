@@ -2,10 +2,6 @@ import {
     ADD_BOARD,
     ADD_POST,
     GET_USER_BOARDS_POSTS,
-    FETCH_FOLLOWINGS_SUCCESS,
-    FETCH_FOLLOWINGS_FAIL,
-    FETCH_FOLLOWERS_SUCCESS,
-    FETCH_FOLLOWERS_FAIL,
     EDIT_PROFILE_SUCCESS,
     EDIT_PROFILE_FAIL,
     CLEAR_ERROR,
@@ -30,36 +26,6 @@ export const addPost = (post, username) => ({
     post,
     username
 });
-
-export const fetchFollowing = username => async dispatch => {
-    try {
-        const res = await axios.get(`/users/${username}/following`);
-        dispatch({
-            type: FETCH_FOLLOWINGS_SUCCESS,
-            payload: res.data
-        });
-    } catch (err) {
-        dispatch({
-            type: FETCH_FOLLOWINGS_FAIL,
-            payload: { error: 'Something went wrong with fetching followings' }
-        });
-    }
-};
-
-export const fetchFollowers = username => async dispatch => {
-    try {
-        const res = await axios.get(`/users/${username}/following`);
-        dispatch({
-            type: FETCH_FOLLOWERS_SUCCESS,
-            payload: res.data
-        });
-    } catch (err) {
-        dispatch({
-            type: FETCH_FOLLOWERS_FAIL,
-            payload: { error: 'Something went wrong with fetching followers' }
-        });
-    }
-};
 
 export const editProfile = (formData, username) => async dispatch => {
     try {

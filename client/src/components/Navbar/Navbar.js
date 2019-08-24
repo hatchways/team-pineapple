@@ -98,7 +98,7 @@ const Navbar = ({ userStore, logout, history, location, searchPosts }) => {
                     </div>
                     <div>
                         <Link
-                            to={''}
+                            to={`/profile/${userStore.user.username}/following`}
                             style={{
                                 textDecoration: 'none'
                             }}>
