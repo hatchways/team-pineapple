@@ -63,7 +63,7 @@ class QuizDialog extends React.Component {
 
     async handleConfirm () {
         const username = this.props.match.params.username;
-        saveInterests(username, this.state.selected);
+        this.props.saveInterests(username, this.state.selected);
         this.handleClose();
     }
 

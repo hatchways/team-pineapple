@@ -1,5 +1,16 @@
-import { FETCH_BOARD_POSTS_SUCCESS, FETCHING_BOARD_POSTS, FETCH_BOARD_POSTS_FAIL } from './types';
+import {
+    FETCH_BOARD_POSTS_SUCCESS,
+    FETCHING_BOARD_POSTS,
+    FETCH_BOARD_POSTS_FAIL,
+    ADD_BOARD_POST
+} from './types';
 import axios from 'axios';
+
+export const addBoardPost = (board, post) => ({
+    type: ADD_BOARD_POST,
+    board,
+    post
+});
 
 // Fetch the board's post
 export const fetchBoardPosts = id => async dispatch => {

@@ -7,8 +7,8 @@ import MorePosts from './MorePosts';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { getBoardsandPosts } from '../../actions/profileActions';
-import { boardService } from '../../services/board';
 import { fetchPosts } from '../../actions/post';
+import { addBoardPost } from '../../actions/boardActions';
 
 const styles = theme => ({
     post: {
@@ -42,15 +42,7 @@ class PostPage extends React.Component {
 
     save = async e => {
         e.preventDefault();
-        try {
-            const response = await boardService.addPost({
-                post: this.state.id,
-                board: this.state.board
-            });
-            console.log(response);
-        } catch (err) {
-            console.log(err.response);
-        }
+        this.props.addBoardPost(this.state.board, this.state.id);
     };
 
     render () {
@@ -124,7 +116,8 @@ function mapDispatchToProps (dispatch) {
     return bindActionCreators(
         {
             getBoardsandPosts,
-            fetchPosts
+            fetchPosts,
+            addBoardPost
         },
         dispatch
     );

@@ -10,7 +10,7 @@ export const boardService = {
     },
     addPost: ({ board, post }) => {
         return axios.put(`/boards/${board}/post`, {
-            _id: `${post}`
+            _id: post
         })
             .then(res => res.data)
             .catch(err => {

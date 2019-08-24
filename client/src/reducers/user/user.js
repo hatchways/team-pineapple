@@ -18,7 +18,13 @@ import {
     ADD_BOARD_SUCCESS,
     ADD_BOARD_ERROR,
     ADD_POST_SUCCESS,
-    ADD_POST_ERROR, CLEAR_ERROR, CREATE_POST_LOADING, EDIT_PROFILE_FAIL, UNFOLLOW_ERROR, FOLLOW_ERROR
+    ADD_POST_ERROR,
+    CLEAR_ERROR,
+    CREATE_POST_LOADING,
+    EDIT_PROFILE_FAIL,
+    UNFOLLOW_ERROR,
+    FOLLOW_ERROR,
+    ADD_BOARD_POST_SUCCESS, ADD_BOARD_POST_ERROR
 } from '../../actions/types';
 
 const initialState = {
@@ -38,9 +44,10 @@ export default (state = initialState, action) => {
         return { ...state };
     case LOGOUT_SUCCESS:
         return { authenticated: false };
-        case SAVE_INTERESTS_SUCCESS:
-            state.user.interests = action.user.interests;
-            return { ...state };
+    case SAVE_INTERESTS_SUCCESS:
+        state.user.interests = action.user.interests;
+        localStorage.setItem('user', JSON.stringify(state.user));
+        return { ...state };
     case GET_TOKEN_SUCCESS:
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case EDIT_PROFILE_SUCCESS:
@@ -67,13 +74,14 @@ export default (state = initialState, action) => {
             loading: false,
             error: action.payload
         };
-        case SAVE_INTERESTS_ERROR:
+    case SAVE_INTERESTS_ERROR:
     case FOLLOW_ERROR:
     case UNFOLLOW_ERROR:
         return { ...state, error: action.error };
     case FETCH_FOLLOWING_SUCCESS:
         return { ...state, following: action.following };
     case FETCH_FOLLOWING_ERROR:
+    case ADD_BOARD_POST_ERROR:
     case FETCH_FOLLOWERS_ERROR:
         return { ...state, error: action.error };
     case FETCH_FOLLOWERS_SUCCESS:
@@ -121,6 +129,10 @@ export default (state = initialState, action) => {
         };
     case DELETE_FAIL:
         return { ...state, error: action.payload.error };
+    case ADD_BOARD_POST_SUCCESS:
+        state.user.boards.find(board => board._id === action.response._id).posts = action.response.posts;
+        localStorage.setItem('user', JSON.stringify(state.user));
+        return { ...state };
     case CLEAR_ERROR:
         return { ...state, error: {} };
     default:

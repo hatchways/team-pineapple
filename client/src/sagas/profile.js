@@ -29,7 +29,7 @@ export function * getBoardsPostsSaga () {
     yield takeLatest(GET_USER_BOARDS_POSTS, getBoardsandPosts);
 }
 
-function* follow (request) {
+function * follow (request) {
     try {
         yield call(profileService.follow, request);
         yield put({ type: FOLLOW_SUCCESS, payload: request.followee });
@@ -38,11 +38,11 @@ function* follow (request) {
     }
 }
 
-export function* followSaga () {
+export function * followSaga () {
     yield takeLatest(FOLLOW, follow);
 }
 
-function* unFollow (request) {
+function * unFollow (request) {
     try {
         yield call(profileService.unfollow, request);
         yield put({ type: UNFOLLOW_SUCCESS, payload: request.followee });
@@ -51,6 +51,6 @@ function* unFollow (request) {
     }
 }
 
-export function* unFollowSaga () {
+export function * unFollowSaga () {
     yield takeLatest(UNFOLLOW, unFollow);
 }

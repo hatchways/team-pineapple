@@ -61,7 +61,7 @@ export function * getTokenSaga () {
     yield takeLatest(GET_TOKEN, getToken);
 }
 
-function* saveInterests (request) {
+function * saveInterests (request) {
     try {
         const response = yield call(userService.saveInterests, request);
         yield put({ type: SAVE_INTERESTS_SUCCESS, user: response });
@@ -70,7 +70,7 @@ function* saveInterests (request) {
     }
 }
 
-export function* saveInterestsSaga () {
+export function * saveInterestsSaga () {
     yield takeLatest(SAVE_INTERESTS, saveInterests);
 }
 
