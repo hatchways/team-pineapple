@@ -16,22 +16,22 @@ export default (state = INITIAL_STATE, action) => {
     const { type, response } = action;
 
     switch (type) {
-        case GET_USER_BOARDS_POSTS_SUCCESS:
-            return {
-                ...state,
-                ...response
-            };
+    case GET_USER_BOARDS_POSTS_SUCCESS:
+        return {
+            ...state,
+            ...response
+        };
     case FOLLOW_SUCCESS:
-        state.profileInfo.followers += 1;
-        state.profileInfo.isFollowing = true;
+        state.user.followers += 1;
+        state.user.isFollowing = true;
         return {
             ...state,
             loading: false,
             error: ''
         };
     case UNFOLLOW_SUCCESS:
-        state.profileInfo.followers -= 1;
-        state.profileInfo.isFollowing = false;
+        state.user.followers -= 1;
+        state.user.isFollowing = false;
         return {
             ...state,
             loading: false,
@@ -39,32 +39,32 @@ export default (state = INITIAL_STATE, action) => {
         };
     case FETCHING_PROFILE:
     case FETCH_PROFILE_SUCCESS:
-        return { ...state, profileInfo: action.payload, loading: false };
+        return { ...state, user: action.payload, loading: false };
     case FETCH_PROFILE_FAIL:
         return { ...state, error: action.payload.error };
     case GET_USER_BOARDS_POSTS_ERROR:
         return { ...state, error: action.err };
-        case DELETE_SUCCESS:
-            let boards = state.profileInfo.boards;
-            if (action.payload.item === 'posts') {
-                boards = state.profileInfo.boards.map(board => {
-                    board.posts = board.posts.filter(post => post._id !== action.payload.id);
-                    return board;
-                });
-            }
-            const profileInfo = {
-                ...state.profileInfo,
-                boards,
-                [action.payload.item]: state.profileInfo[action.payload.item].filter(item => item._id !== action.payload.id)
-            };
-            return {
-                ...state,
-                profileInfo,
-                loading: false,
-                error: action.payload.error
-            };
-        case DELETE_FAIL:
-            return { ...state, error: action.payload.error };
+    case DELETE_SUCCESS:
+        let boards = state.boards;
+        if (action.payload.item === 'posts') {
+            boards = state.boards.map(board => {
+                board.posts = board.posts.filter(post => post._id !== action.payload.id);
+                return board;
+            });
+        }
+        const user = {
+            ...state,
+            boards,
+            [action.payload.item]: state[action.payload.item].filter(item => item._id !== action.payload.id)
+        };
+        return {
+            ...state,
+            user,
+            loading: false,
+            error: action.payload.error
+        };
+    case DELETE_FAIL:
+        return { ...state, error: action.payload.error };
     case CLEAR_ERROR:
         return { ...state, error: {} };
     default:
