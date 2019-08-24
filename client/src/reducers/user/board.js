@@ -1,4 +1,9 @@
-import { FETCHING_BOARD_POSTS, FETCH_BOARD_POSTS_FAIL, FETCH_BOARD_POSTS_SUCCESS } from '../../actions/types';
+import {
+    FETCHING_BOARD_POSTS,
+    FETCH_BOARD_POSTS_FAIL,
+    FETCH_BOARD_POSTS_SUCCESS,
+    ADD_BOARD_SUCCESS, ADD_BOARD_ERROR
+} from '../../actions/types';
 
 const INITIAL_STATE = {
     board: {
@@ -8,8 +13,14 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-    const { type, payload } = action;
+    const { type, payload, response } = action;
     switch (type) {
+    case ADD_BOARD_SUCCESS:
+        state.user.boards.push(response.board);
+        localStorage.setItem('user', JSON.stringify(state.user));
+        return { ...state };
+    case ADD_BOARD_ERROR:
+        return { ...state, error: action.err };
     case FETCHING_BOARD_POSTS:
         return { ...state, loading: true, board: INITIAL_STATE.board };
     case FETCH_BOARD_POSTS_SUCCESS:

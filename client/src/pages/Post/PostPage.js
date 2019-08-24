@@ -16,6 +16,14 @@ const styles = theme => ({
     },
     more: {
         marginTop: theme.spacing(4)
+    },
+    loading: {
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        right: '0',
+        left: '0',
+        margin: 'auto'
     }
 });
 
@@ -57,15 +65,7 @@ class PostPage extends React.Component {
         if (!post(match.params.id)) {
             return (
                 <div>
-                    <CircularProgress
-                        style={{
-                            position: 'absolute',
-                            top: '0',
-                            bottom: '0',
-                            right: '0',
-                            left: '0',
-                            margin: 'auto'
-                        }}/>
+                    <CircularProgress className={classes.loading}/>
                 </div>
             );
         }

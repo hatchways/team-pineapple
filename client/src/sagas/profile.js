@@ -1,4 +1,4 @@
-import { put, takeLatest, call, select } from 'redux-saga/effects';
+import { put, takeLatest, call } from 'redux-saga/effects';
 import {
     GET_USER_BOARDS_POSTS,
     GET_USER_BOARDS_POSTS_SUCCESS,
@@ -8,20 +8,13 @@ import {
     FOLLOW, UNFOLLOW_SUCCESS, UNFOLLOW_ERROR, UNFOLLOW
 } from '../actions/types';
 import { profileService } from '../services/profile';
-const getUserStore = (state) => state.UserStore;
 
 function * getBoardsandPosts (request) {
-    const UserStore = yield select(getUserStore);
-
-    if (UserStore.authenticated && UserStore.user.username === request.username) {
-        yield put({ type: GET_USER_BOARDS_POSTS_SUCCESS, response: UserStore });
-    } else {
-        try {
-            const response = yield call(profileService.getBoardsandPosts, { ...request });
-            yield put({ type: GET_USER_BOARDS_POSTS_SUCCESS, response });
-        } catch (err) {
-            yield put({ type: GET_USER_BOARDS_POSTS_ERROR });
-        }
+    try {
+        const response = yield call(profileService.getBoardsandPosts, { ...request });
+        yield put({ type: GET_USER_BOARDS_POSTS_SUCCESS, response });
+    } catch (err) {
+        yield put({ type: GET_USER_BOARDS_POSTS_ERROR });
     }
 }
 
