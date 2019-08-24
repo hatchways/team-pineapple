@@ -1,25 +1,13 @@
-import { axios } from './utils';
+import { Get, Post } from './utils';
 
 export const profileService = {
     getBoardsandPosts: ({ username }) => {
-        return axios.get(`/users/${username}`).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
+        return Get(`/users/${username}`);
     },
     follow: ({ followee }) => {
-        return axios.post('/users/follow', { followee }).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
+        return Post('/users/follow', { followee });
     },
     unfollow: ({ followee }) => {
-        return axios.post('/users/unfollow', { followee }).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
+        return Post('/users/unfollow', { followee });
     }
 };
