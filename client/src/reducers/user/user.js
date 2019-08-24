@@ -7,12 +7,9 @@ import {
     EDIT_PROFILE_SUCCESS,
     SAVE_INTERESTS_SUCCESS,
     SAVE_INTERESTS_ERROR,
-    DELETE_SUCCESS,
-    DELETE_FAIL,
     CLEAR_ERROR,
     CREATE_POST_LOADING,
-    EDIT_PROFILE_FAIL,
-    ADD_BOARD_POST_SUCCESS, ADD_BOARD_POST_ERROR
+    EDIT_PROFILE_FAIL
 } from '../../actions/types';
 
 const initialState = {
@@ -43,38 +40,9 @@ export default (state = initialState, action) => {
     case EDIT_PROFILE_FAIL:
         return { ...state, error: action.payload.error };
     case SAVE_INTERESTS_ERROR:
-    case ADD_BOARD_POST_ERROR:
         return { ...state, error: action.error };
-
     case CREATE_POST_LOADING:
         return { ...state, loading: true, error: {} };
-
-    case DELETE_SUCCESS:
-        let boards = state.user.boards;
-        if (action.payload.item === 'posts') {
-            boards = state.user.boards.map(board => {
-                board.posts = board.posts.filter(post => post._id !== action.payload.id);
-                return board;
-            });
-        }
-        const user = {
-            ...state.user,
-            boards,
-            [action.payload.item]: state.user[action.payload.item].filter(item => item._id !== action.payload.id)
-        };
-        localStorage.setItem('user', JSON.stringify(user));
-        return {
-            ...state,
-            user,
-            loading: false,
-            error: action.payload.error
-        };
-    case DELETE_FAIL:
-        return { ...state, error: action.payload.error };
-    case ADD_BOARD_POST_SUCCESS:
-        state.user.boards.find(board => board._id === action.response._id).posts = action.response.posts;
-        localStorage.setItem('user', JSON.stringify(state.user));
-        return { ...state };
     case CLEAR_ERROR:
         return { ...state, error: {} };
     default:

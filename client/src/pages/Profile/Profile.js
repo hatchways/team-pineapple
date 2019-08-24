@@ -43,19 +43,19 @@ class Profile extends Component {
     };
 
     onFollowPress = () => {
-        const { user, follow } = this.props;
+        const { follow, profileStore: { user } } = this.props;
         follow(user._id);
         this.setState({ followedOrNot: !this.state.followedOrNot });
     };
 
     onUnfollowPress = () => {
-        const { user, unfollow } = this.props;
+        const { unfollow, profileStore: { user } } = this.props;
         unfollow(user._id);
         this.setState({ followedOrNot: !this.state.followedOrNot });
     };
 
     checkFollowing = () => {
-        return this.props.user.isFollowing;
+        return this.props.profileStore.user.isFollowing;
     };
 
     renderFollowButton = () => {
@@ -63,7 +63,7 @@ class Profile extends Component {
             return null;
         }
 
-        return !this.props.user.isFollowing ? (
+        return !this.props.profileStore.user.isFollowing ? (
             <Button className="followButton" color="primary" onClick={() => this.onFollowPress()}>
                 Follow!
             </Button>
@@ -80,7 +80,7 @@ class Profile extends Component {
     };
 
     renderBoards = () => {
-        const { boards } = this.props.user;
+        const { profileStore: { boards } } = this.props;
         return boards.length === 0 ? (
             <h2>There are no boards</h2>
         ) : (
@@ -126,7 +126,7 @@ class Profile extends Component {
     };
 
     renderPosts = () => {
-        const { posts } = this.props.user;
+        const { profileStore: { posts } } = this.props;
         return posts.length === 0 ? (
             <h2>There are no posts</h2>
         ) : (
@@ -135,7 +135,7 @@ class Profile extends Component {
     };
 
     renderFavorites = () => {
-        const { favourites } = this.props.user;
+        const { profileStore: { favourites } } = this.props;
         return favourites.length === 0 ? <h2>There are no favorite posts</h2>
             : <div style={{ width: '100vw' }}><Posts posts={favourites}/></div>;
     };
@@ -143,7 +143,7 @@ class Profile extends Component {
     renderCreateButtons = () => {
         const {
             userStore,
-            user
+            profileStore: { user }
         } = this.props;
         if (userStore.authenticated) {
             if (user._id !== userStore.user._id) {
@@ -198,7 +198,7 @@ class Profile extends Component {
     };
 
     render () {
-        const { user, profileStore: { loading } } = this.props;
+        const { profileStore: { user, boards, posts, loading } } = this.props;
         if (_.isUndefined(user) || loading) {
             return <CircularProgress className="spinner" />;
         }
@@ -268,7 +268,7 @@ class Profile extends Component {
                     <div className="activePanel">
                         <div
                             className={
-                                user.boards.length === 0 ? 'gridContainer1' : 'gridContainer'
+                                boards.length === 0 ? 'gridContainer1' : 'gridContainer'
                             }
                         >
                             {this.renderBoards()}
@@ -311,7 +311,7 @@ class Profile extends Component {
                     <div className="Panel">
                         <div
                             className={
-                                user.posts.length === 0 ? 'postContainer1' : 'postContainer'
+                                posts.length === 0 ? 'postContainer1' : 'postContainer'
                             }
                         >
                             {this.renderPosts()}
@@ -362,8 +362,7 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
     userStore: state.UserStore,
-    profileStore: state.ProfileStore,
-    user: state.ProfileStore.profileInfo
+    profileStore: state.ProfileStore
 });
 
 const mapDispatchToProps = dispatch => {

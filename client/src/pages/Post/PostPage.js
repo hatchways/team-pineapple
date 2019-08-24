@@ -103,10 +103,7 @@ const mapStateToProps = state => ({
     userStore: state.UserStore,
     post: id => {
         if (state.PostStore.posts.length || state.UserStore.authenticated) {
-            return (
-                state.PostStore.posts.find(post => id === post._id) ||
-                state.UserStore.user.posts.find(post => id === post._id)
-            );
+            return state.PostStore.posts.find(post => id === post._id);
         }
     },
     morePosts: state.PostStore.morePosts

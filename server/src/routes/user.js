@@ -29,7 +29,7 @@ router.post('/register', [UserValidation.register, async (req, res) => {
 // @access   Public
 router.post('/login', [UserValidation.login, async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
-        .select('-posts -favourites')
+    .select('-posts')
         .populate({ path: 'boards', select: 'title' })
         .exec();
     if (!user) {
@@ -65,7 +65,8 @@ router.get ('/:username', [pub, async (req, res) => {
         const isFollowing = req.decoded ? await user.isFollowing(req.decoded._id) : false;
         return res.status(200).json({
             success: true,
-            user: { ...user.toObject(), ...await user.follow(), isFollowing }
+            user: { ...user.toObject(), ...await user.follow(), isFollowing },
+            posts: user.posts, favourites: user.favourites, boards: user.boards
         });
     } catch (err) {
         return res.status(400).json({ success: false, message: err });
