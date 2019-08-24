@@ -63,7 +63,12 @@ export const fetchProfileInfo = username => async dispatch => {
     } catch (err) {
         dispatch({
             type: FETCH_PROFILE_FAIL,
-            payload: { error: 'Something went wrong with fetching the profile' }
+            payload: {
+                error: {
+                    message: 'Something went wrong with fetching the profile',
+                    status: 'error'
+                }
+            }
         });
     }
 };
@@ -149,7 +154,10 @@ export const createPost = (formData, username, board) => async dispatch => {
         }
         dispatch({
             type: ADD_POST_SUCCESS,
-            response: { post: res.data, error: { message: 'Succesfully created a post', status: 'success' } }
+            response: {
+                post: res.data,
+                error: { message: 'Succesfully created a post', status: 'success' }
+            }
         });
     } catch (err) {
         dispatch({
