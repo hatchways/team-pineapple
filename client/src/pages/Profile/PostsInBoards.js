@@ -5,11 +5,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { fetchBoardPosts } from '../actions/boardActions';
+import { fetchBoardPosts } from '../../actions/boardActions';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 
-import './stylesheet/Board.css';
+import '../stylesheet/Board.css';
 
 class PostInBoards extends Component {
     componentDidMount = () => {

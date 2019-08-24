@@ -10,16 +10,16 @@ import './App.css';
 import Main from './pages/Main';
 import SignUp from './pages/SignUp.js';
 import Login from './components/Dialog/Login/Login';
-import Profile from './pages/Profile.js';
+import Profile from './pages/Profile/Profile.js';
 
 import PostPage from './pages/Post/PostPage';
 import { getToken } from './actions/userActions';
 
-import PostInBoards from './pages/PostsInBoards';
+import PostInBoards from './pages/Profile/PostsInBoards';
 
 import NavBar from './components/Navbar/Navbar';
 
-import FollowersPage from './pages/FollowersPage';
+import FollowersPage from './pages/Followers/FollowersPage';
 
 class App extends Component {
     constructor (props) {
