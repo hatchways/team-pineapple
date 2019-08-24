@@ -34,22 +34,8 @@ export const userService = {
 
         return null;
     },
-    getBoardsandPosts: ({ username }) => {
-        return axios.get(`/users/${username}`).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
-    },
-    follow: ({ followee }) => {
-        return axios.post('/users/follow', { followee }).then(res => {
-            return res.data;
-        }).catch(err => {
-            throw err;
-        });
-    },
-    unfollow: ({ followee }) => {
-        return axios.post('/users/unfollow', { followee }).then(res => {
+    saveInterests: ({ username, interests }) => {
+        return axios.put(`/users/${username}/interests`, { interests }).then(res => {
             return res.data;
         }).catch(err => {
             throw err;

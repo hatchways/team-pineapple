@@ -5,6 +5,8 @@ import {
     LOGIN_ERROR,
     GET_TOKEN_SUCCESS,
     EDIT_PROFILE_SUCCESS,
+    SAVE_INTERESTS_SUCCESS,
+    SAVE_INTERESTS_ERROR,
     FOLLOW_SUCCESS,
     UNFOLLOW_SUCCESS,
     FETCH_FOLLOWING_SUCCESS,
@@ -36,6 +38,9 @@ export default (state = initialState, action) => {
         return { ...state };
     case LOGOUT_SUCCESS:
         return { authenticated: false };
+        case SAVE_INTERESTS_SUCCESS:
+            state.user.interests = action.user.interests;
+            return { ...state };
     case GET_TOKEN_SUCCESS:
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case EDIT_PROFILE_SUCCESS:
@@ -62,6 +67,7 @@ export default (state = initialState, action) => {
             loading: false,
             error: action.payload
         };
+        case SAVE_INTERESTS_ERROR:
     case FOLLOW_ERROR:
     case UNFOLLOW_ERROR:
         return { ...state, error: action.error };

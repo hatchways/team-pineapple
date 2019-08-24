@@ -3,6 +3,7 @@ import {
     LOGIN,
     LOGIN_RESPONSE,
     LOGOUT,
+    SAVE_INTERESTS,
     FOLLOW,
     UNFOLLOW, FETCH_FOLLOWING, FETCH_FOLLOWERS
 } from '../actions/types';
@@ -22,6 +23,12 @@ export const logout = () => ({
 
 export const getToken = () => ({
     type: GET_TOKEN
+});
+
+export const saveInterests = (username, interests) => ({
+    type: SAVE_INTERESTS,
+    username,
+    interests
 });
 
 export const getFollowing = user => ({

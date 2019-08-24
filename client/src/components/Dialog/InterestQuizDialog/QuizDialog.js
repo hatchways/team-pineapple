@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import { DialogTitle, DialogActions, DialogContent } from '../components';
 import Interests from './Interests';
-import { axios } from '../../../services/utils.js';
+import { saveInterests } from '../../../actions/userActions';
 
 const styles = theme => ({
     root: {
@@ -63,11 +63,7 @@ class QuizDialog extends React.Component {
 
     async handleConfirm () {
         const username = this.props.match.params.username;
-        axios.put(`/users/${username}/interests`, {
-            interests: this.state.selected
-        })
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
+        saveInterests(username, this.state.selected);
         this.handleClose();
     }
 
@@ -102,7 +98,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps (dispatch) {
     return bindActionCreators(
         {
-            // back-end integration with redux-saga
+            saveInterests
         },
         dispatch
     );
