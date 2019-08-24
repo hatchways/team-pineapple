@@ -110,9 +110,9 @@ class PostPage extends React.Component {
 const mapStateToProps = state => ({
     userStore: state.UserStore,
     post: id => {
-        if (state.posts.posts.length || state.UserStore.authenticated) {
+        if (state.PostStore.posts.length || state.UserStore.authenticated) {
             return (
-                state.posts.posts.find(post => id === post._id) ||
+                state.PostStore.posts.find(post => id === post._id) ||
                 state.UserStore.user.posts.find(post => id === post._id)
             );
         }

@@ -113,7 +113,7 @@ class UserClass {
 
     async isFollowing (id) {
         try {
-            const follow = await Follow.findOne({ follower: this._id, followee: id }).lean();
+            const follow = await Follow.findOne({ follower: id, followee: this._id }).lean();
             return !!follow;
         } catch (e) {
             return false;

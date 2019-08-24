@@ -2,7 +2,9 @@ import {
     GET_TOKEN,
     LOGIN,
     LOGIN_RESPONSE,
-    LOGOUT
+    LOGOUT,
+    FOLLOW,
+    UNFOLLOW
 } from '../actions/types';
 
 export const login = user => ({
@@ -20,4 +22,14 @@ export const logout = () => ({
 
 export const getToken = () => ({
     type: GET_TOKEN
+});
+
+export const follow = followee => ({
+    type: FOLLOW,
+    followee
+});
+
+export const unfollow = followee => ({
+    type: UNFOLLOW,
+    followee
 });

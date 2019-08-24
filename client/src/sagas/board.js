@@ -4,7 +4,7 @@ import { boardService } from '../services/board';
 
 function * addBoard (request) {
     try {
-        const response = yield call(boardService.addBoard, { ...request });
+        const response = yield call(boardService.addBoard, request);
         yield put({ type: ADD_BOARD_SUCCESS, response });
     } catch (err) {
         yield put({ type: ADD_BOARD_ERROR, err });

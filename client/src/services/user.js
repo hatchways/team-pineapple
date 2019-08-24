@@ -41,6 +41,20 @@ export const userService = {
             throw err;
         });
     },
+    follow: ({ followee }) => {
+        axios.post('/users/follow', { followee }).then(res => {
+            return res.data;
+        }).catch(err => {
+            throw err;
+        });
+    },
+    unfollow: ({ followee }) => {
+        axios.post('/users/unfollow', { followee }).then(res => {
+            return res.data;
+        }).catch(err => {
+            throw err;
+        });
+    },
     getFollowers: ({ user }) => {
         axios.get(`/users/${user}/following`).then(res => {
             return res.data;

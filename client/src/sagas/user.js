@@ -1,12 +1,12 @@
-import { put, takeLatest, call, select } from 'redux-saga/effects';
+import { put, takeLatest, call } from 'redux-saga/effects';
 import {
     LOGIN, LOGIN_SUCCESS, LOGIN_ERROR,
     GET_TOKEN, GET_TOKEN_SUCCESS,
-    GET_USER_BOARDS_POSTS, GET_USER_BOARDS_POSTS_SUCCESS, GET_USER_BOARDS_POSTS_ERROR,
-    LOGOUT, LOGOUT_SUCCESS
+    LOGOUT, LOGOUT_SUCCESS,
+    FOLLOW, FOLLOW_ERROR, FOLLOW_SUCCESS,
+    UNFOLLOW, UNFOLLOW_ERROR, UNFOLLOW_SUCCESS
 } from '../actions/types';
 import { userService } from '../services/user';
-const getUserStore = (state) => state.UserStore;
 
 /*
 call user service login
@@ -50,21 +50,30 @@ export function * getTokenSaga () {
     yield takeLatest(GET_TOKEN, getToken);
 }
 
-function * getBoardsandPosts (request) {
-    const UserStore = yield select(getUserStore);
-
-    if (UserStore.authenticated && UserStore.user.username === request.username) {
-        yield put({ type: GET_USER_BOARDS_POSTS_SUCCESS, response: UserStore });
-    } else {
-        try {
-            const response = yield call(userService.getBoardsandPosts, { ...request });
-            yield put({ type: GET_USER_BOARDS_POSTS_SUCCESS, response });
-        } catch (err) {
-            yield put({ type: GET_USER_BOARDS_POSTS_ERROR });
-        }
+function * follow (request) {
+    try {
+        yield call(userService.follow, request);
+        yield put({ type: FOLLOW_SUCCESS, payload: request.followee });
+    } catch (err) {
+        console.log(err);
+        yield put({ type: FOLLOW_ERROR, payload: 'could not follow user' });
     }
 }
 
-export function * getBoardsPostsSaga () {
-    yield takeLatest(GET_USER_BOARDS_POSTS, getBoardsandPosts);
+export function * followSaga () {
+    yield takeLatest(FOLLOW, follow);
+}
+
+function * unFollow (request) {
+    try {
+        yield call(userService.unfollow, request);
+        yield put({ type: UNFOLLOW_SUCCESS, payload: request.followee });
+    } catch (err) {
+        console.log(err);
+        yield put({ type: UNFOLLOW_ERROR, payload: 'could not unfollow user' });
+    }
+}
+
+export function * unFollowSaga () {
+    yield takeLatest(UNFOLLOW, unFollow);
 }

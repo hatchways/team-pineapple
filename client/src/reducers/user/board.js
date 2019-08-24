@@ -1,4 +1,4 @@
-import { FETCHING_BOARD_POSTS, FETCH_BOARD_POSTS_FAIL, FETCH_BOARD_POSTS_SUCCESS } from '../actions/types';
+import { FETCHING_BOARD_POSTS, FETCH_BOARD_POSTS_FAIL, FETCH_BOARD_POSTS_SUCCESS } from '../../actions/types';
 
 const INITIAL_STATE = {
     board: {

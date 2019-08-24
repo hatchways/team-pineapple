@@ -84,7 +84,7 @@ router.put('/:username', [upload.single('image'), UserValidation.updateUser, asy
     if(req.file) { update.profile = req.file.location; }
     if (req.body.name) { update.name = req.body.name; }
     try {
-        const user = await User.findOneAndUpdate({ username: req.params.username }, update, {new:true}).select('-password').lean();
+        const user = await User.findOneAndUpdate({ username: req.params.username }, update, { new:true }).select('-password').lean();
         if(!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
@@ -106,9 +106,7 @@ router.post ('/follow', [UserValidation.followUser, async (req, res) => {
     try {
         const follow = { ...req.body, follower: req.decoded._id };
         await Follow.findOneAndUpdate (follow, follow, {
-            upsert: true,
-            new: true,
-            setDefaultsOnInsert: true
+            upsert: true, setDefaultsOnInsert: true
         }).lean ();
         return res.status(200).json({ success: true });
     } catch (err) {
@@ -194,7 +192,15 @@ router.post('/:username/posts', [upload.single('image'), UserValidation.addPost,
     if (req.file) {
         try {
             const post = await Post.create({ ...req.body, user: user._id, image: req.file.location });
-            return res.status(201).json({ success: true, post });
+
+            if(req.body.board) {
+                const board = await Board.findOneAndUpdate({_id: req.body.board, user: req.decoded._id}, { $addToSet: { posts: post._id } }).lean();
+                if (!board) {
+                    return res.status(404).json({ success: false, message: 'no board found' });
+                }
+            }
+
+            return res.status(201).json({ success: true, post, board: req.body.board });
         } catch(err) {
             return res.status(400).json({err});
         }

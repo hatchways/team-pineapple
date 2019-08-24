@@ -6,9 +6,7 @@ import {
     GET_TOKEN_SUCCESS,
     EDIT_PROFILE_SUCCESS,
     FOLLOW_SUCCESS,
-    FOLLOW_FAIL,
     UNFOLLOW_SUCCESS,
-    UNFOLLOW_FAIL,
     FETCH_FOLLOWINGS_SUCCESS,
     FETCH_FOLLOWINGS_FAIL,
     FETCH_FOLLOWERS_SUCCESS,
@@ -18,9 +16,8 @@ import {
     ADD_BOARD_SUCCESS,
     ADD_BOARD_ERROR,
     ADD_POST_SUCCESS,
-    ADD_POST_ERROR, CLEAR_ERROR
-} from '../actions/types';
-import _ from 'lodash';
+    ADD_POST_ERROR, CLEAR_ERROR, CREATE_POST_LOADING, EDIT_PROFILE_FAIL, UNFOLLOW_ERROR, FOLLOW_ERROR
+} from '../../actions/types';
 
 const initialState = {
     authenticated: false
@@ -42,31 +39,31 @@ export default (state = initialState, action) => {
     case GET_TOKEN_SUCCESS:
         return { ...state, authenticated: true, user: action.user, token: action.token };
     case EDIT_PROFILE_SUCCESS:
-        return { ...state, user: { ...state.user, profile: action.payload.user.profile, name: action.payload.user.name } };
+        return { ...state, user: { ...state.user, ...action.payload.user } };
+    case EDIT_PROFILE_FAIL:
+        return { ...state, error: action.payload.error };
     case FOLLOW_SUCCESS:
-        const containsId = _.filter(
-            state.profileInfo.followers,
-            follower => follower.id === action.payload.id
-        );
+        if (state.following) {
+            state.following.push(action.payload);
+        }
+        state.user.following += 1;
         return {
             ...state,
-            followers: _.isEmpty(containsId)
-                ? state.profileInfo.followers
-                : [...state.profileInfo.followers, action.payload],
             loading: false,
             error: ''
         };
     case UNFOLLOW_SUCCESS:
+        if (state.following) {
+            state.following = state.following.filter(followee => followee._id !== action.payload);
+        }
+        state.user.following -= 1;
         return {
             ...state,
-            followers: state.profileInfo.followers.filter(
-                follower => follower._id !== action.payload
-            ),
             loading: false,
             error: action.payload
         };
-    case FOLLOW_FAIL:
-    case UNFOLLOW_FAIL:
+    case FOLLOW_ERROR:
+    case UNFOLLOW_ERROR:
         return { ...state, error: action.payload.error };
     case FETCH_FOLLOWINGS_SUCCESS:
         return { ...state, following: action.payload };
@@ -81,7 +78,12 @@ export default (state = initialState, action) => {
         return { ...state };
     case ADD_BOARD_ERROR:
         return { ...state, error: action.err };
+    case CREATE_POST_LOADING:
+        return { ...state, loading: true, error: {} };
     case ADD_POST_SUCCESS:
+        if (response.board) {
+            state.user.boards.find(board => board._id === response.board).posts.push(response.post);
+        }
         state.user.posts.push(response.post);
         localStorage.setItem('user', JSON.stringify(state.user));
         return {

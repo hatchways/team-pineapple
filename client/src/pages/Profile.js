@@ -13,18 +13,13 @@ import BoardDialog from '../components/Dialog/BoardDialog/BoardDialog';
 import EditPicUserDialog from '../components/Dialog/EditPicUserDialog/EditPicUserDialog';
 import Button from '@material-ui/core/Button';
 import DeleteButton from '../components/Buttons/DeleteButton';
-import {
-    getBoardsandPosts,
-    followUser,
-    unfollowUser,
-    fetchProfileInfo,
-    clearError
-} from '../actions/profileActions';
 import Posts from '../components/Posts/Posts';
 import _ from 'lodash';
 import './stylesheet/Profile.css';
 import BoardPreview from '../components/Posts/BoardPreview';
 import Tooltip from '@material-ui/core/Tooltip';
+import { getBoardsandPosts, clearError } from '../actions/profileActions';
+import { follow, unfollow } from '../actions/userActions';
 
 class Profile extends Component {
     state = {
@@ -48,36 +43,19 @@ class Profile extends Component {
     };
 
     onFollowPress = () => {
-        const {
-            userStore: { authenticated },
-            user,
-            history,
-            followUser
-        } = this.props;
-        const followee = user(this.state.username)._id;
-        const currentUserId = user._id;
-        if (!authenticated) {
-            history.push('/login');
-        } else {
-            followUser(followee, currentUserId);
-            this.setState({ followedOrNot: !this.state.followedOrNot });
-        }
+        const { user, follow } = this.props;
+        follow(user(this.state.username)._id);
+        this.setState({ followedOrNot: !this.state.followedOrNot });
     };
 
     onUnfollowPress = () => {
-        const {
-            userStore,
-            user,
-            unfollowUser
-        } = this.props;
-        const currentUserId = userStore.user._id;
-        const followee = user(this.state.username)._id;
-        unfollowUser(followee, currentUserId);
+        const { user, unfollow } = this.props;
+        unfollow(user(this.state.username)._id);
         this.setState({ followedOrNot: !this.state.followedOrNot });
     };
 
     checkFollowing = () => {
-        return _.isEmpty(this.props.user(this.state.username).isFollowing);
+        return this.props.user(this.state.username).isFollowing;
     };
 
     renderFollowButton = () => {
@@ -85,7 +63,7 @@ class Profile extends Component {
             return null;
         }
 
-        return this.checkFollowing() ? (
+        return !this.props.user(this.state.username).isFollowing ? (
             <Button className="followButton" color="primary" onClick={() => this.onFollowPress()}>
                 Follow!
             </Button>
@@ -400,9 +378,8 @@ const mapDispatchToProps = dispatch => {
     return bindActionCreators(
         {
             getBoardsandPosts,
-            followUser,
-            unfollowUser,
-            fetchProfileInfo,
+            follow,
+            unfollow,
             clearError
         },
         dispatch
