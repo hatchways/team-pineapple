@@ -14,7 +14,6 @@ import '../stylesheet/Board.css';
 class PostInBoards extends Component {
     componentDidMount = () => {
         const { getBoardPosts, match } = this.props;
-        console.log(match.params.id);
         getBoardPosts(match.params.id);
     };
 
@@ -61,7 +60,6 @@ class PostInBoards extends Component {
     };
 
     render () {
-        console.log(this.props.boardStore);
         const {
             boardStore: { board }
         } = this.props;

@@ -102,7 +102,6 @@ class Login extends React.Component {
 
     render () {
         const { classes, userStore } = this.props;
-        console.log(userStore);
         if (userStore.authenticated && !this.state.snackBar) {
             return (<Redirect to={'/profile/' + userStore.user.username} />);
         }

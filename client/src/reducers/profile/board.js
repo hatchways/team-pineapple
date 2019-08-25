@@ -13,7 +13,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
     const { type, response } = action;
-    console.log(action);
     switch (type) {
     case GET_BOARD_POSTS_SUCCESS:
         console.log(response);
