@@ -29,7 +29,7 @@ router.post('/register', [UserValidation.register, async (req, res) => {
 // @access   Public
 router.post('/login', [UserValidation.login, async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
-    .select('-posts')
+        .select('-posts')
         .populate({ path: 'boards', select: 'title' })
         .exec();
     if (!user) {

@@ -4,8 +4,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { fetchBoardPosts } from '../../actions/boardActions';
+import { bindActionCreators, compose } from 'redux';
+import { getBoardPosts } from '../../actions/boardActions';
 import { withRouter } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -13,8 +13,9 @@ import '../stylesheet/Board.css';
 
 class PostInBoards extends Component {
     componentDidMount = () => {
-        const { fetchBoardPosts, match } = this.props;
-        fetchBoardPosts(match.params.id);
+        const { getBoardPosts, match } = this.props;
+        console.log(match.params.id);
+        getBoardPosts(match.params.id);
     };
 
     renderPosts = () => {
@@ -60,10 +61,11 @@ class PostInBoards extends Component {
     };
 
     render () {
+        console.log(this.props.boardStore);
         const {
-            boardStore: { loading, board }
+            boardStore: { board }
         } = this.props;
-        if (loading) {
+        if (!board) {
             return <CircularProgress className="spinner" />;
         }
         return (
@@ -76,13 +78,22 @@ class PostInBoards extends Component {
 }
 
 const mapStateToProps = state => ({
-    boardStore: state.BoardStore
+    boardStore: state.ProfileStore
 });
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(
+        {
+            getBoardPosts
+        },
+        dispatch
+    );
+};
 
 export default compose(
     withRouter,
     connect(
         mapStateToProps,
-        { fetchBoardPosts }
+        mapDispatchToProps
     )
 )(PostInBoards);

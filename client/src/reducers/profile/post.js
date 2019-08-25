@@ -5,10 +5,9 @@ export default (state = {}, action) => {
     switch (type) {
     case ADD_POST_SUCCESS:
         if (response.board) {
-            state.user.boards.find(board => board._id === response.board).posts.push(response.post);
+            state.boards.find(board => board._id === response.board).posts.push(response.post);
         }
-        state.user.posts.push(response.post);
-        localStorage.setItem('user', JSON.stringify(state.user));
+        state.posts.push(response.post);
         return {
             ...state,
             loading: false,

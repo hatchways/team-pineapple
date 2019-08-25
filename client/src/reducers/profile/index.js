@@ -12,7 +12,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
     return {
-        boards: boards(state.boards, action),
+        ...boards(state, action),
         favourites: favourites(state.favourites, action),
         posts: posts(state.posts, action),
         ...profile(state, action)

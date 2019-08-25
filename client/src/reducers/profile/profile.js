@@ -7,14 +7,13 @@ import {
     CLEAR_ERROR, FOLLOW_SUCCESS, UNFOLLOW_SUCCESS, DELETE_SUCCESS, DELETE_FAIL
 } from '../../actions/types';
 
-const INITIAL_STATE = {
-    loading: false,
+const initialState = {
+    loading: true,
     error: {}
 };
 
-export default (state = INITIAL_STATE, action) => {
+export default (state = initialState, action) => {
     const { type, response } = action;
-
     switch (type) {
     case GET_USER_BOARDS_POSTS_SUCCESS:
         return {

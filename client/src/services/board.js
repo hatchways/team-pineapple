@@ -1,4 +1,4 @@
-import { Post, Put } from './utils';
+import { Get, Post, Put } from './utils';
 
 export const boardService = {
     addBoard: ({ board, username }) => {
@@ -6,5 +6,8 @@ export const boardService = {
     },
     addPost: ({ board, post }) => {
         return Put(`/boards/${board}/post`, { _id: post });
+    },
+    getPosts: ({ id }) => {
+        return Get(`/boards/${id}/posts`);
     }
 };
