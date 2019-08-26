@@ -201,7 +201,7 @@ class PostDialog extends React.Component {
                             <DialogContent>
                                 <BoardList
                                     className="boardList"
-                                    boards={this.props.profileStore.profileInfo.boards}
+                                    boards={this.props.userStore.user.boards}
                                     handleSelect={this.handleSelectChange}
                                     value={board}
                                 />

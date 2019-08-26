@@ -51,14 +51,10 @@ export default (state = initialState, action) => {
                 return board;
             });
         }
-        const user = {
-            ...state,
-            boards,
-            [action.payload.item]: state[action.payload.item].filter(item => item._id !== action.payload.id)
-        };
         return {
             ...state,
-            user,
+            boards,
+            [action.payload.item]: state[action.payload.item].filter(item => item._id !== action.payload.id),
             loading: false,
             error: action.payload.error
         };

@@ -45,7 +45,7 @@ class QuizDialog extends React.Component {
     componentDidMount () {
         this.setState({
             username: this.props.match.params.username,
-            selected: this.props.ProfileStore.profileInfo.interests
+            selected: this.props.user.interests
         });
     }
 
@@ -92,7 +92,7 @@ class QuizDialog extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    ProfileStore: state.ProfileStore
+    user: state.UserStore.user
 });
 
 function mapDispatchToProps (dispatch) {
