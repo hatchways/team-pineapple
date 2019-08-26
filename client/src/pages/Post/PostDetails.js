@@ -7,9 +7,9 @@ import Button from '@material-ui/core/Button';
 import moment from 'moment';
 
 import { withRouter } from 'react-router-dom';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { favouritePost } from '../../actions/profileActions';
+import { favouritePost, unFavouritePost } from '../../actions/userActions';
 
 const useStyles = makeStyles(theme => ({
     author: {
@@ -79,10 +79,20 @@ const PostDetails = ({ post, history, favouritePost, authenticated, match }) => 
     );
 };
 
+function mapDispatchToProps (dispatch) {
+    return bindActionCreators(
+        {
+            favouritePost,
+            unFavouritePost
+        },
+        dispatch
+    );
+}
+
 export default compose(
     withRouter,
     connect(
         null,
-        { favouritePost }
+        mapDispatchToProps
     )
 )(PostDetails);

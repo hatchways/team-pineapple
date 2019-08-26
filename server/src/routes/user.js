@@ -41,7 +41,7 @@ router.post('/login', [UserValidation.login, async (req, res) => {
         } else {
             return res.status(200).json({
                 success: true,
-                user: { ...user.toObject(), password: '', ...await user.follow() },
+                user: { ...user.toObject(), boards: user.boards, password: '', ...await user.follow() },
                 token: user.loginToken ()
             });
         }

@@ -1,4 +1,4 @@
-import { axios, addTokenHeaders, Put, Get } from './utils';
+import { axios, addTokenHeaders, Put, Get, Post } from './utils';
 
 export const userService = {
     login: (user) => {
@@ -36,6 +36,12 @@ export const userService = {
     },
     saveInterests: ({ username, interests }) => {
         return Put(`/users/${username}/interests`, { interests });
+    },
+    favouritePost: ({ username, post }) => {
+        return Post(`/users/${username}/favourite`, { post });
+    },
+    unFavouritePost: ({ username, post }) => {
+        return Post(`/users/${username}/unfavourite`, { post });
     },
     getFollowers: ({ user }) => {
         return Get(`/users/${user}/followers`);
