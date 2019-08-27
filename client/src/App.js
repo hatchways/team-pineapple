@@ -10,7 +10,7 @@ import './App.css';
 import Main from './pages/Main';
 import SignUp from './pages/SignUp.js';
 import Login from './components/Dialog/Login/Login';
-import Profile from './pages/Profile/Profile.js';
+import ProfilePage from './pages/Profile/ProfilePage.js';
 
 import PostPage from './pages/Post/PostPage';
 import { getToken } from './actions/userActions';
@@ -39,7 +39,7 @@ class App extends Component {
                             <Route
                                 path='/profile/:username'
                                 render={props => (
-                                    <Profile key={props.match.params.username} {...props} />
+                                    <ProfilePage key={props.match.params.username} {...props} />
                                 )}
                             />
                             <Route exact path='/signup' component={SignUp} />

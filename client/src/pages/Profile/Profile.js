@@ -1,162 +1,43 @@
-import React, { Component } from 'react';
-import { compose, bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import SnackBar from '../../components/SnackBar/SnackBar';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { Card, Typography } from '@material-ui/core';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import { Route, Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import InterestQuizDialog from '../../components/Dialog/InterestQuizDialog/QuizDialog';
-import PostDialog from '../../components/Dialog/PostDialog/PostDialog';
-import BoardDialog from '../../components/Dialog/BoardDialog/BoardDialog';
-import EditPicUserDialog from '../../components/Dialog/EditPicUserDialog/EditPicUserDialog';
 import Button from '@material-ui/core/Button';
-import DeleteButton from '../../components/Buttons/DeleteButton';
-import Posts from '../../components/Posts/Posts';
 import _ from 'lodash';
 import '../stylesheet/Profile.css';
-import BoardPreview from '../../components/Posts/BoardPreview';
 import Tooltip from '@material-ui/core/Tooltip';
-import { getBoardsandPosts, clearError } from '../../actions/profileActions';
-import { follow, unfollow } from '../../actions/userActions';
 
-class Profile extends Component {
-    state = {
-        username: '',
-        activePanel: 'board',
-        SnackBar: true
-    };
-
-    componentDidMount () {
-        const username = this.props.match.params.username;
-        this.setState({ username: username });
-        this.props.getBoardsandPosts(username);
-    }
-
-    toggleTabs = item => {
-        this.setState({ activePanel: `${item}` });
-    };
-
-    onCreatePress = item => {
-        this.props.history.push(`/profile/${this.state.username}/${item}/create`);
-    };
-
-    onFollowPress = () => {
-        const { follow, profileStore: { user } } = this.props;
-        follow(user._id);
-        this.setState({ followedOrNot: !this.state.followedOrNot });
-    };
-
-    onUnfollowPress = () => {
-        const { unfollow, profileStore: { user } } = this.props;
-        unfollow(user._id);
-        this.setState({ followedOrNot: !this.state.followedOrNot });
-    };
-
-    checkFollowing = () => {
-        return this.props.profileStore.user.isFollowing;
-    };
-
-    renderFollowButton = () => {
-        if (!this.props.userStore.authenticated) {
+const Profile = ({ profile, user, followHandle, unFollowHandle, createHandle }) => {
+    const FollowButton = () => {
+        if (!user.authenticated) {
             return null;
         }
 
-        return !this.props.profileStore.user.isFollowing ? (
-            <Button className="followButton" color="primary" onClick={() => this.onFollowPress()}>
-                Follow!
+        return !profile.user.isFollowing ? (
+            <Button className="followButton" color="primary" onClick={() => followHandle()}>
+                Follow
             </Button>
         ) : (
             <Button
                 className="followButton"
                 color="primary"
                 variant={'contained'}
-                onClick={() => this.onUnfollowPress()}
+                onClick={() => unFollowHandle()}
             >
-                Stop Following!
+                unFollow
             </Button>
         );
     };
 
-    renderBoards = () => {
-        const { profileStore: { boards } } = this.props;
-        return boards.length === 0 ? (
-            <h2>There are no boards</h2>
-        ) : (
-            boards.map((board, i) => {
-                return (
-                    <Card key={i} className="card">
-                        <Link
-                            to={{ pathname: `/board/${board._id}`, state: { board } }}
-                            className="boardLink"
-                        >
-                            <CardActionArea>
-                                <BoardPreview posts={board.posts} className='boardPreview'/>
-                            </CardActionArea>
-                        </Link>
-                        <div
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: '1fr 1fr'
-                            }}
-                        >
-                            <div>
-                                <Typography variant="h6" className="cardHeader">
-                                    {board.title}
-                                </Typography>
-                                <Typography variant="body1" className="cardHeader">
-                                    {board.posts.length} posts
-                                </Typography>
-                            </div>
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    alignContent: 'center',
-                                    justifyContent: 'end'
-                                }}
-                            >
-                                <DeleteButton item="boards" id={board._id} title={board.title} />
-                            </div>
-                        </div>
-                    </Card>
-                );
-            })
-        );
-    };
-
-    renderPosts = () => {
-        const { profileStore: { posts } } = this.props;
-        return posts.length === 0 ? (
-            <h2>There are no posts</h2>
-        ) : (
-            <Posts posts={posts}/>
-        );
-    };
-
-    renderFavorites = () => {
-        const { profileStore: { favourites } } = this.props;
-        return favourites.length === 0 ? <h2>There are no favorite posts</h2>
-            : <div style={{ width: '100vw' }}><Posts posts={favourites}/></div>;
-    };
-
-    renderCreateButtons = () => {
-        const {
-            userStore,
-            profileStore: { user }
-        } = this.props;
-        if (userStore.authenticated) {
-            if (user._id !== userStore.user._id) {
-                return <>{this.renderFollowButton()}</>;
-            }
-        } else if (!userStore.authenticated) {
-            return <>{this.renderFollowButton()}</>;
+    const CreateButtons = () => {
+        if (user.authenticated && profile.user._id !== user.user._id) {
+            return <FollowButton />;
         }
         return (
-            <>
+            <div>
                 <Button
                     color="primary"
-                    onClick={() => this.onCreatePress('board')}
+                    onClick={() => createHandle('board')}
                     style={{
                         margin: '10px'
                     }}
@@ -166,221 +47,43 @@ class Profile extends Component {
                 <Button
                     color="primary"
                     variant={'contained'}
-                    onClick={() => this.onCreatePress('post')}
+                    onClick={() => createHandle('post')}
                     style={{
                         margin: '10px'
                     }}
                 >
                     Create Post
                 </Button>
-            </>
-        );
-    };
-
-    renderSnackBarError = () => {
-        const {
-            profileStore: { error },
-            clearError
-        } = this.props;
-        if (!_.isEmpty(error)) {
-            return (
-                <SnackBar
-                    message={error.message}
-                    variant={error.status}
-                    open={!_.isEmpty(error)}
-                    onClose={() => {
-                        this.setState({ SnackBar: false });
-                        clearError();
-                    }}
-                />
-            );
-        }
-    };
-
-    render () {
-        const { profileStore: { user, boards, posts, loading } } = this.props;
-        if (_.isUndefined(user) || loading) {
-            return <CircularProgress className="spinner" />;
-        }
-        return (
-            <div>
-                <Route path="/profile/:username/edit" component={EditPicUserDialog} />
-                <Route path="/profile/:username/interest-quiz" component={InterestQuizDialog} />
-                <Route
-                    path="/profile/:username/post/create"
-                    render={props => <PostDialog key={props.match.params.username} {...props} />}
-                />
-                <Route path="/profile/:username/board/create" component={BoardDialog} />
-                <div className="subHeader">
-                    <div className="nameContainer">
-                        <Tooltip title="Edit Profile">
-                            <Avatar
-                                className="subHeaderIcon"
-                                component={Link}
-                                src={user.profile}
-                                to={'/profile/' + user.username + '/edit'}
-                            />
-                        </Tooltip>
-                        <div>
-                            <h3 className="profileName">{user.name}</h3>
-                            <h5 className="profileFollowers">
-                                {user.followers} Followers |{' '}
-                                {user.following} Following
-                            </h5>
-                        </div>
-                    </div>
-                    <div />
-                    <div>{this.renderCreateButtons()}</div>
-                </div>
-                <div style={{ display: this.state.activePanel === 'board' ? 'grid' : 'none' }}>
-                    <div className="tabSection">
-                        <div>
-                            <Button
-                                color="primary"
-                                variant={'contained'}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Boards
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('post')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Posts
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('favorite')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Favorites
-                            </Button>
-                        </div>
-                        <div />
-                    </div>
-                    <div className="activePanel">
-                        <div
-                            className={
-                                boards.length === 0 ? 'gridContainer1' : 'gridContainer'
-                            }
-                        >
-                            {this.renderBoards()}
-                        </div>
-                    </div>
-                </div>
-                <div style={{ display: this.state.activePanel === 'post' ? 'grid' : 'none' }}>
-                    <div className="tabSection">
-                        <div>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('board')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Boards
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant={'contained'}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Posts
-                            </Button>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('favorite')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Favorites
-                            </Button>
-                        </div>
-                        <div />
-                    </div>
-                    <div className="Panel">
-                        <div
-                            className={
-                                posts.length === 0 ? 'postContainer1' : 'postContainer'
-                            }
-                        >
-                            {this.renderPosts()}
-                        </div>
-                    </div>
-                </div>
-                <div style={{ display: this.state.activePanel === 'favorite' ? 'grid' : 'none' }}>
-                    <div className="tabSection">
-                        <div>
-                            <Button
-                                color="primary"
-                                onClick={() => this.toggleTabs('board')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Boards
-                            </Button>
-                            <Button
-                                id="post"
-                                color="primary"
-                                onClick={() => this.toggleTabs('post')}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Posts
-                            </Button>
-                            <Button
-                                color="primary"
-                                variant={'contained'}
-                                style={{
-                                    margin: '10px'
-                                }}
-                            >
-                                Favorites
-                            </Button>
-                        </div>
-                        <div />
-                    </div>
-                    <div className="activePanel">{this.renderFavorites()}</div>
-                </div>
-                {this.renderSnackBarError()}
             </div>
         );
+    };
+
+    if (_.isUndefined(profile.user) || profile.loading) {
+        return <CircularProgress className="spinner" />;
     }
-}
-
-const mapStateToProps = state => ({
-    userStore: state.UserStore,
-    profileStore: state.ProfileStore
-});
-
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators(
-        {
-            getBoardsandPosts,
-            follow,
-            unfollow,
-            clearError
-        },
-        dispatch
+    return (
+        <div className="subHeader">
+            <div className="nameContainer">
+                <Tooltip title="Edit Profile">
+                    <Avatar
+                        className="subHeaderIcon"
+                        component={Link}
+                        src={profile.user.profile}
+                        to={'/profile/' + profile.user.username + '/edit'}
+                    />
+                </Tooltip>
+                <div>
+                    <h3 className="profileName">{profile.user.name}</h3>
+                    <h5 className="profileFollowers">
+                        {profile.user.followers} Followers |{' '}
+                        {profile.user.following} Following
+                    </h5>
+                </div>
+            </div>
+            <div />
+            <CreateButtons />
+        </div>
     );
 };
 
-export default compose(
-    withRouter,
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )
-)(Profile);
+export default Profile;
