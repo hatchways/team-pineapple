@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { getFollowing } from '../../actions/userActions';
 import Avatar from '@material-ui/core/Avatar';
+import { withStyles } from '@material-ui/styles';
+
+const styles = theme => ({
+    root: {
+        padding: '1rem 5rem'
+    }
+});
 
 class FollowingPage extends Component {
     state = {
@@ -34,9 +41,10 @@ class FollowingPage extends Component {
     };
 
     render () {
+        const { classes } = this.props;
         return (
-            <div>
-                <h1>This is the followers page</h1>
+            <div className={classes.root}>
+                <h1>You are currently Following:</h1>
                 <div>
                     {this.Users()}
                 </div>
@@ -58,7 +66,10 @@ const mapDispatchToProps = dispatch => {
     );
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+export default compose(
+    withStyles(styles),
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
 )(FollowingPage);

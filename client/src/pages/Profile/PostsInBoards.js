@@ -18,10 +18,8 @@ class PostInBoards extends Component {
     };
 
     renderPosts = () => {
-        const {
-            boardStore: { board },
-            history
-        } = this.props;
+        const { history, match } = this.props;
+        const board = this.props.board(match.params.id);
         const posts = _.isEmpty(board.posts)
             ? []
             : board.posts.map(post => {
@@ -60,9 +58,8 @@ class PostInBoards extends Component {
     };
 
     render () {
-        const {
-            boardStore: { board }
-        } = this.props;
+        const { match } = this.props;
+        const board = this.props.board(match.params.id);
         if (!board) {
             return <CircularProgress className="spinner" />;
         }
@@ -76,7 +73,12 @@ class PostInBoards extends Component {
 }
 
 const mapStateToProps = state => ({
-    boardStore: state.ProfileStore
+    board: (id) => {
+        if (state.ProfileStore.boards.length) {
+            return state.ProfileStore.boards.find(board => board._id === id);
+        }
+        return false;
+    }
 });
 
 const mapDispatchToProps = dispatch => {

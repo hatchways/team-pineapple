@@ -219,8 +219,7 @@ router.post ('/:username/favourite', [UserValidation.addPostToFavourites, async 
         if (!user) {
             return res.status (404).json ({ success: false, message: 'User not found' });
         }
-
-        res.status (201).json ({ success: true });
+        return res.status(201).json({ success: true });
     } catch (err) {
         return res.status (400).json ({ success: false, err });
     }
@@ -231,12 +230,11 @@ router.post ('/:username/favourite', [UserValidation.addPostToFavourites, async 
 // @access   Private
 router.post ('/:username/unfavourite', [UserValidation.removePostFromFavourites, async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate (req.decoded._id, { 'pull': { favourites: req.body.post } }).lean ();
+        const user = await User.findByIdAndUpdate(req.decoded._id, { '$pull': { favourites: req.body.post } }).lean();
         if (!user) {
             return res.status (404).json ({ success: false, message: 'User not found' });
         }
-
-        res.status (200).json ({ success: true });
+        return res.status(200).json({ success: true });
     } catch (err) {
         return res.status (400).json ({ success: false, err });
     }

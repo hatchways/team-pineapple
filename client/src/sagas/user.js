@@ -94,8 +94,8 @@ export function * favouritePostSaga () {
 
 function * unFavouritePost (request) {
     try {
-        const response = yield call(userService.unFavouritePost, request);
-        yield put({ type: REMOVE_FAVOURITE_SUCCESS, response });
+        yield call(userService.unFavouritePost, request);
+        yield put({ type: REMOVE_FAVOURITE_SUCCESS, post: request.post });
     } catch (err) {
         yield put({ type: REMOVE_FAVOURITE_ERROR, err });
     }

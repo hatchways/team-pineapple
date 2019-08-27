@@ -9,7 +9,7 @@ import {
     SAVE_INTERESTS_ERROR,
     CLEAR_ERROR,
     CREATE_POST_LOADING,
-    EDIT_PROFILE_FAIL
+    EDIT_PROFILE_FAIL, DELETE_SUCCESS, DELETE_FAIL
 } from '../../actions/types';
 
 const initialState = {
@@ -43,6 +43,21 @@ export default (state = initialState, action) => {
         return { ...state, error: action.error };
     case CREATE_POST_LOADING:
         return { ...state, loading: true, error: {} };
+    case DELETE_SUCCESS:
+        if (action.payload.item === 'posts') {
+            state.user.boards = state.user.boards.map(board => {
+                board.posts = board.posts.filter(post => post._id !== action.payload.id);
+                return board;
+            });
+        }
+        state.user[action.payload.item] = state.user[action.payload.item].filter(item => item._id !== action.payload.id);
+        return {
+            ...state,
+            loading: false,
+            error: action.payload.error
+        };
+    case DELETE_FAIL:
+        return { ...state, error: action.payload.error };
     case CLEAR_ERROR:
         return { ...state, error: {} };
     default:

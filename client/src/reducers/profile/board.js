@@ -4,19 +4,21 @@ import {
     ADD_BOARD_SUCCESS, ADD_BOARD_ERROR, ADD_BOARD_POST_SUCCESS, ADD_BOARD_POST_ERROR
 } from '../../actions/types';
 
-const initialState = {
-    board: {
-        posts: []
-    },
-    loading: true
-};
-
-export default (state = initialState, action) => {
+export default (state = {}, action) => {
     const { type, response } = action;
     switch (type) {
     case GET_BOARD_POSTS_SUCCESS:
-        console.log(response);
-        return { ...state, loading: false, board: response.board };
+        if (!state.boards.length) {
+            state.boards = [response.board];
+        } else {
+            state.boards = state.boards.map(board => {
+                if (board._id === response.board._id) {
+                    return response.board;
+                }
+                return board;
+            });
+        }
+        return { ...state, loading: false };
     case GET_BOARD_POSTS_ERROR:
         return { ...state, loading: false };
     case ADD_BOARD_SUCCESS:

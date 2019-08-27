@@ -8,6 +8,9 @@ import {
 } from '../../actions/types';
 
 const initialState = {
+    boards: [],
+    posts: [],
+    favourites: [],
     loading: true,
     error: {}
 };

@@ -158,8 +158,10 @@ class ProfilePage extends Component {
                         </div>
                         <div />
                     </div>
-                    <div className="activePanel">
-                        <Posts posts={favourites}/>
+                    <div className="Panel">
+                        <div className={posts.length === 0 ? 'postContainer1' : 'postContainer'}>
+                            <Posts posts={favourites}/>
+                        </div>
                     </div>
                 </div>
                 {this.renderSnackBarError()}
