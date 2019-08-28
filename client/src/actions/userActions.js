@@ -5,7 +5,10 @@ import {
     LOGOUT,
     AUTHORIZING,
     SIGN_UP_FAIL,
-    SIGN_UP_SUCCESS
+    SIGN_UP_SUCCESS,
+    SAVE_INTERESTS,
+    FOLLOW,
+    UNFOLLOW, FETCH_FOLLOWING, FETCH_FOLLOWERS, ADD_FAVOURITE, REMOVE_FAVOURITE
 } from '../actions/types';
 import axios from 'axios';
 
@@ -46,3 +49,40 @@ export const signUp = body => async dispatch => {
         });
     }
 };
+export const saveInterests = (username, interests) => ({
+    type: SAVE_INTERESTS,
+    username,
+    interests
+});
+
+export const favouritePost = (username, post) => ({
+    type: ADD_FAVOURITE,
+    username,
+    post
+});
+
+export const unFavouritePost = (username, post) => ({
+    type: REMOVE_FAVOURITE,
+    username,
+    post
+});
+
+export const getFollowing = user => ({
+    type: FETCH_FOLLOWING,
+    user
+});
+
+export const getFollowers = user => ({
+    type: FETCH_FOLLOWERS,
+    user
+});
+
+export const follow = followee => ({
+    type: FOLLOW,
+    followee
+});
+
+export const unfollow = followee => ({
+    type: UNFOLLOW,
+    followee
+});
