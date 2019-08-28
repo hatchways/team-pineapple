@@ -35,7 +35,6 @@ const SignUpForm = ({
                     value={username}
                     style={{ width: '400px', marginLeft: '40px', marginRight: '40px' }}
                     onChange={e => onChangeText(e)}
-                    
                 />
             </DialogContent>
             <DialogContent style={{ marginBottom: '5px' }}>
