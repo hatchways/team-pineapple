@@ -115,9 +115,9 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
         password: '',
         password2: '',
         passwordError: '',
-        usernameError: ''
+        emailError: ''
     });
-    const { email, username, password, password2, passwordError, usernameError } = formData;
+    const { email, username, password, password2, passwordError, emailError } = formData;
 
     const onChangeText = e =>
         setFormData({
@@ -136,20 +136,16 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
                 passwordError: 'Password must contain at least 8 characters'
             });
         }
-
-        // TODO: Fix Signup (fix password validation as well)
-        // if (!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-zd$@!%*?&].{8,}/)) {
-
-        if (username.length < 6 || username.length > 20) {
+        if (email.length < 10 || email.length > 40) {
             setFormData({
                 ...formData,
-                usernameError: 'Username must be atleast 6 to 20 characters'
+                emailError: 'Email must be atleast 10 to 40 characters'
             });
         } else if (
             password === password2 &&
             password.length > 8 &&
-            username.length > 6 &&
-            username.length < 20
+            email.length > 10 &&
+            email.length < 40
         ) {
             const body = {
                 username,
@@ -168,12 +164,11 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
     const renderLoading = () => {
         if (loading) {
             return <LinearProgress />;
+        } else if (error.status === 'success') {
+            login({ email, password });
+            history.push('/');
         }
     };
-    if (error.status === 'success') {
-        login({ email, password });
-        history.push('/');
-    }
 
     return (
         <Dialog open={true} aria-labelledby="form-dialog-title" onClick={() => onCloseClick()}>
@@ -195,11 +190,11 @@ const SignUp = ({ history, signUp, login, userStore: { loading, error } }) => {
                     password={password}
                     password2={password2}
                     passwordError={passwordError}
-                    usernameError={usernameError}
+                    emailError={emailError}
                 />
                 <DialogActions>
                     <Button
-                        onClick={postInfo}
+                        onClick={() => postInfo()}
                         color="primary"
                         className={style.signupbutton}
                         disabled={loading}

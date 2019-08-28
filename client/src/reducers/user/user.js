@@ -3,6 +3,9 @@ import {
     LOGOUT_SUCCESS,
     LOGIN_RESPONSE,
     LOGIN_ERROR,
+    AUTHORIZING,
+    SIGN_UP_FAIL,
+    SIGN_UP_SUCCESS,
     GET_TOKEN_SUCCESS,
     EDIT_PROFILE_SUCCESS,
     SAVE_INTERESTS_SUCCESS,
@@ -13,22 +16,34 @@ import {
 } from '../../actions/types';
 
 const initialState = {
-    authenticated: false
+    authenticated: false,
+    loading: false,
+    error: { message: '', status: null }
 };
 
 export default (state = initialState, action) => {
     const { type, response } = action;
-
     switch (type) {
+    case AUTHORIZING:
+        return { ...state, loading: true };
     case LOGIN_SUCCESS:
-        return { authenticated: true, user: response.user, token: response.token };
+        return { authenticated: true, user: response.user, token: response.token, loading: false };
     case LOGIN_ERROR:
-        return { ...state, authenticated: false, error: action.error };
+        return { ...state, authenticated: false, error: action.error, loading: false };
     case LOGIN_RESPONSE:
-        delete state.error;
-        return { ...state };
+        return { ...state, error: initialState.error };
     case LOGOUT_SUCCESS:
-        return { authenticated: false };
+        return initialState;
+    case SIGN_UP_FAIL:
+        return { ...state, loading: false, error: action.payload };
+    case SIGN_UP_SUCCESS:
+        return {
+            ...state,
+            loading: false,
+            user: action.payload.user,
+            token: action.payload.token,
+            error: { message: 'Registration Success!', status: 'success' }
+        };
     case SAVE_INTERESTS_SUCCESS:
         state.user.interests = action.user.interests;
         localStorage.setItem('user', JSON.stringify(state.user));
